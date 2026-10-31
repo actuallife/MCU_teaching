@@ -1,0 +1,593 @@
+<title>離散機率分配複習</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+/* 版面：單欄答案卷。頁首進度軌 → 模式選擇 → 題卡（左側導航色標尺）→ 成績與弱點分析 */
+:root{
+  --ink:#16181d; --ink-2:#4a5468; --ink-3:#737f94;
+  --paper:#fbfbfc; --card:#ffffff; --line:#dfe3ea; --line-2:#eceff4;
+  --navy:#1f3864; --navy-soft:#eef1f7;
+  --gold:#c47f17; --gold-soft:#fdf4e8;
+  --good:#1a7f52; --good-soft:#e9f5ef;
+  --bad:#b3261e; --bad-soft:#fdeceb;
+  --shadow:0 1px 2px rgba(31,56,100,.06), 0 6px 20px -12px rgba(31,56,100,.22);
+  --on-navy:#ffffff;
+  --f-head:"Noto Serif TC", "Songti TC", serif;
+  --f-body:"Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --f-num:ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ink:#e8ecf3; --ink-2:#aab4c6; --ink-3:#7e8a9e;
+  --paper:#12151b; --card:#191d25; --line:#2b313c; --line-2:#222833;
+  --navy:#9db4dc; --navy-soft:#1c2433;
+  --gold:#e0a84e; --gold-soft:#2a2316;
+  --good:#5ec294; --good-soft:#15271f;
+  --bad:#f08a82; --bad-soft:#2b1917;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.7);
+  --on-navy:#12151b;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --ink:#e8ecf3; --ink-2:#aab4c6; --ink-3:#7e8a9e;
+  --paper:#12151b; --card:#191d25; --line:#2b313c; --line-2:#222833;
+  --navy:#9db4dc; --navy-soft:#1c2433;
+  --gold:#e0a84e; --gold-soft:#2a2316;
+  --good:#5ec294; --good-soft:#15271f;
+  --bad:#f08a82; --bad-soft:#2b1917;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.7);
+  --on-navy:#12151b;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);
+  font-size:15px;line-height:1.75;-webkit-text-size-adjust:100%}
+.wrap{max-width:820px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 56px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
+  z-index:20;background:var(--paper)}
+
+/* ── 頁首 ── */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:15;background:var(--paper);
+  border-bottom:1px solid var(--line);margin-bottom:26px}
+.hrow{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:11px}
+.brand{font-family:var(--f-head);font-weight:700;font-size:16px;color:var(--navy);
+  letter-spacing:.01em;white-space:nowrap}
+.brand small{display:block;font-family:var(--f-body);font-weight:400;font-size:11px;
+  color:var(--ink-3);letter-spacing:.04em}
+.hspace{flex:1;min-width:0}
+.hstat{font-family:var(--f-num);font-size:12px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.rail{height:3px;background:var(--line-2)}
+.rail > i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s ease}
+
+/* ── 共用 ── */
+h1{font-family:var(--f-head);font-size:27px;line-height:1.35;margin:4px 0 8px;
+  text-wrap:balance;letter-spacing:.01em}
+h2{font-family:var(--f-head);font-size:19px;margin:0 0 12px;text-wrap:balance}
+p{margin:0 0 12px}
+.lede{color:var(--ink-2);margin-bottom:22px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:500;margin-bottom:6px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 18px;border-radius:7px;border:1px solid var(--navy);background:var(--navy);
+  color:var(--on-navy);font-weight:500;font-size:14px;transition:opacity .15s}
+.btn:hover{opacity:.86}
+.btn.ghost{background:transparent;color:var(--navy);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--navy);opacity:1}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── 模式卡 ── */
+.modes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-bottom:26px}
+.mode{display:flex;flex-direction:column;gap:5px;text-align:left;padding:16px 17px;
+  background:var(--card);border:1px solid var(--line);border-left:3px solid var(--navy);
+  border-radius:3px;box-shadow:var(--shadow);transition:transform .15s,border-color .15s;min-width:0}
+.mode:hover{transform:translateY(-1px);border-left-color:var(--gold)}
+.mode:disabled{opacity:.45}
+.mode b{font-family:var(--f-head);font-size:16px;color:var(--ink)}
+.mode span{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.mode em{font-style:normal;font-family:var(--f-num);font-size:11px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums}
+
+/* ── 題卡 ── */
+.q{background:var(--card);border:1px solid var(--line);border-radius:3px;
+  box-shadow:var(--shadow);padding:20px 20px 18px;margin-bottom:16px;
+  border-left:3px solid var(--line);min-width:0}
+.q.is-mc{border-left-color:var(--navy)}
+.q.is-calc{border-left-color:var(--gold)}
+.qhead{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:11px}
+.qno{font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--navy);
+  background:var(--navy-soft);padding:2px 8px;border-radius:3px;font-variant-numeric:tabular-nums}
+.tag{font-size:11px;color:var(--ink-3);border:1px solid var(--line);
+  padding:1px 7px;border-radius:99px;white-space:nowrap}
+.tag.lec{color:var(--gold);border-color:var(--gold)}
+.stem{margin-bottom:13px;line-height:1.8}
+.stem b{color:var(--navy)}
+
+/* 表格 */
+.tw{overflow-x:auto;margin:0 0 14px;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;font-size:13px;min-width:100%;
+  font-variant-numeric:tabular-nums;font-family:var(--f-num)}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:center;white-space:nowrap}
+th{background:var(--navy-soft);color:var(--navy);font-weight:700}
+td:first-child,th:first-child{text-align:left;font-family:var(--f-body);font-weight:500}
+
+/* 選項 */
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border:1px solid var(--line);
+  border-radius:5px;background:transparent;text-align:left;line-height:1.65;font-size:14.5px;
+  color:var(--ink);transition:border-color .12s,background .12s;width:100%;min-width:0}
+.opt:hover:not(:disabled){border-color:var(--navy)}
+.opt .k{font-family:var(--f-num);font-weight:700;color:var(--ink-3);flex:none}
+.opt .v{min-width:0;flex:1}
+.opt[aria-pressed="true"]{border-color:var(--navy);background:var(--navy-soft)}
+.opt[aria-pressed="true"] .k{color:var(--navy)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)}
+.opt.ok .k{color:var(--good)}
+.opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.opt.no .k{color:var(--bad)}
+.opt:disabled{cursor:default}
+
+/* 計算題小題 */
+.part{border-top:1px solid var(--line-2);padding-top:13px;margin-top:13px}
+.part:first-of-type{border-top:0;margin-top:0}
+.plab{font-family:var(--f-num);font-weight:700;color:var(--navy);margin-right:6px}
+.pq{margin-bottom:9px;line-height:1.75}
+.inrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+input[type=text]{font:inherit;font-family:var(--f-num);font-variant-numeric:tabular-nums;
+  padding:8px 11px;border:1px solid var(--line);border-radius:5px;background:var(--card);
+  color:var(--ink);width:150px;max-width:100%}
+input[type=text]:focus{border-color:var(--navy)}
+textarea{font:inherit;width:100%;min-height:76px;padding:9px 11px;border:1px solid var(--line);
+  border-radius:5px;background:var(--card);color:var(--ink);resize:vertical;line-height:1.7}
+textarea:focus{border-color:var(--navy)}
+.unit{font-size:13px;color:var(--ink-3)}
+.tolnote{font-size:11.5px;color:var(--ink-3);font-family:var(--f-num)}
+
+/* 詳解 */
+.sol{margin-top:11px;padding:12px 14px;border-radius:5px;font-size:13.5px;line-height:1.8;
+  background:var(--navy-soft);border-left:3px solid var(--navy)}
+.sol.good{background:var(--good-soft);border-left-color:var(--good)}
+.sol.bad{background:var(--bad-soft);border-left-color:var(--bad)}
+.sol .lab{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:5px;font-weight:500}
+.sol b{color:var(--navy)}
+.sol.good b{color:var(--good)}
+.sol.bad b{color:var(--bad)}
+.note{margin-top:11px;padding:11px 14px;border-radius:5px;background:var(--gold-soft);
+  border-left:3px solid var(--gold);font-size:13px;line-height:1.75}
+.note .lab{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:4px;font-weight:700}
+.rub{margin:9px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.rub li{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.65}
+.rub input{margin:4px 0 0;flex:none;accent-color:var(--good);width:15px;height:15px}
+.verdict{font-family:var(--f-num);font-size:12px;font-weight:700;padding:1px 8px;
+  border-radius:3px;margin-left:auto;white-space:nowrap}
+.verdict.ok{color:var(--good);background:var(--good-soft)}
+.verdict.no{color:var(--bad);background:var(--bad-soft)}
+.verdict.half{color:var(--gold);background:var(--gold-soft)}
+
+/* ── 成績 ── */
+.score{background:var(--card);border:1px solid var(--line);border-radius:3px;
+  box-shadow:var(--shadow);padding:22px;margin-bottom:18px;border-top:3px solid var(--navy)}
+.big{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.big .n{font-family:var(--f-num);font-size:46px;font-weight:700;line-height:1;
+  color:var(--navy);font-variant-numeric:tabular-nums}
+.big .d{font-size:13px;color:var(--ink-2)}
+.split{display:grid;gap:10px;grid-template-columns:1fr 1fr;margin:16px 0 4px}
+.sp{padding:11px 13px;border:1px solid var(--line);border-radius:4px;min-width:0}
+.sp .t{font-size:11.5px;color:var(--ink-3);margin-bottom:3px}
+.sp .v{font-family:var(--f-num);font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+.bars{margin-top:18px;display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:minmax(0,9.5em) 1fr auto;gap:10px;align-items:center;font-size:12.5px}
+.bar .nm{color:var(--ink-2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .tr{height:7px;background:var(--line-2);border-radius:99px;overflow:hidden;min-width:0}
+.bar .tr i{display:block;height:100%;border-radius:99px;background:var(--good)}
+.bar .tr i.warn{background:var(--gold)}
+.bar .tr i.poor{background:var(--bad)}
+.bar .pc{font-family:var(--f-num);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.hist{font-size:12.5px;color:var(--ink-2);margin-top:14px;padding-top:12px;border-top:1px solid var(--line-2)}
+.hist .num{color:var(--ink)}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--ink-3);line-height:1.8}
+@media (max-width:460px){
+  .split{grid-template-columns:1fr}
+  .big .n{font-size:38px}
+  h1{font-size:23px}
+  .bar{grid-template-columns:minmax(0,6.5em) 1fr auto}
+}
+</style>
+
+<header>
+  <div class="hrow">
+    <div class="brand">離散機率分配<small>統計學（一）· 第 5 章 · 期中考複習</small></div>
+    <div class="hspace"></div>
+    <div class="hstat" id="hstat"></div>
+  </div>
+  <div class="rail"><i id="rail"></i></div>
+</header>
+
+<div class="wrap">
+  <main id="app"></main>
+  <footer>
+    題目取材自第 7 週課堂簡報《離散機率分配》，<span class="num" id="fratio"></span> 為講義範例的相似題（換情境、換數字，解法結構相同）。<br>
+    計分方式對應期中考：選擇題 50 分、計算與簡答題 50 分。數值題自動批改，簡答題依評分要點自評。<br>
+    統計學（一）· 銘傳大學資訊管理學系 · 林漢洲
+  </footer>
+</div>
+
+<script>
+const DATA = /*__QUESTIONS__*/;
+const $ = (s,r)=>(r||document).querySelector(s);
+const app = $('#app');
+
+/* ── 持久化（可能被瀏覽器拒絕，全部包 try/catch） ── */
+const KEY='w7review.v1';
+let store = {hist:[], wrong:{}, seen:{}};
+try{ const raw=localStorage.getItem(KEY); if(raw) store=Object.assign(store, JSON.parse(raw)); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
+
+/* ── 工具 ── */
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function pickSpread(pool, n){
+  // 盡量讓五大主題都被抽到：先每主題輪流各抽一題，再隨機補滿
+  const byT={}; shuffle(pool).forEach(q=>{ (byT[q.topic]=byT[q.topic]||[]).push(q); });
+  const keys=shuffle(Object.keys(byT)), out=[];
+  let guard=0;
+  while(out.length<n && guard++<500){
+    let added=false;
+    for(const k of keys){ if(out.length>=n) break; if(byT[k].length){ out.push(byT[k].shift()); added=true; } }
+    if(!added) break;
+  }
+  return shuffle(out).slice(0,n);
+}
+const esc = s => String(s);
+function tableHTML(t){
+  if(!t) return '';
+  let h='<div class="tw"><table><thead><tr>'+t.head.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>';
+  t.rows.forEach(r=>{ h+='<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>'; });
+  return h+'</tbody></table></div>';
+}
+
+/* ── 狀態 ── */
+let S = null;   // {mode,label,mc:[],calc:[],answers:{},submitted:false}
+
+/* ── 首頁 ── */
+function home(){
+  S=null; setRail(0); $('#hstat').textContent='';
+  const h=store.hist, n=Object.keys(store.wrong).length;
+  const last = h.length ? h[h.length-1] : null;
+  app.innerHTML = `
+    <h1>把第 5 章練到不用想</h1>
+    <p class="lede">三種練法，題目每次重抽、選項每次重排，所以同一份可以一直做。
+      每題都附完整詳解與出處投影片頁碼，錯過的題會自動進錯題本。</p>
+    <div class="modes">
+      <button class="mode" data-m="exam"><b>模擬測驗</b>
+        <span>照期中考比重出一份卷：選擇題 10 題（50 分）＋ 計算與簡答 3 大題（50 分）。作答完一次送出、一次看詳解。</span>
+        <em>約 35 分鐘</em></button>
+      <button class="mode" data-m="drill"><b>主題練習</b>
+        <span>挑一個主題連續作答，每題答完立刻看詳解。觀念沒通的時候用這個。</span>
+        <em>五個主題 · 每次 6 題</em></button>
+      <button class="mode" data-m="wrong" ${n?'':'disabled'}><b>錯題複習</b>
+        <span>${n?'只出之前答錯的題目。答對兩次才會從錯題本移除。':'還沒有錯題紀錄。先做一次模擬測驗或主題練習。'}</span>
+        <em>目前 ${n} 題</em></button>
+    </div>
+    ${last?`<div class="hist">上次成績　<span class="num">${last.score}</span> / 100　·　${last.label}　·　共練習 <span class="num">${h.length}</span> 次</div>`:''}
+    <div class="note"><span class="lab">考前提醒</span>
+      本章最常見的失分點有三個：<b>卜瓦松的 μ 沒換算成題目問的那段區間</b>（算錯不會報錯）、
+      <b>二項公式把失敗次數的指數寫成 n 而不是 n−x</b>、
+      <b>把「至少 1 次」當成 f(1) 而不是 1−f(0)</b>。這三點在題庫裡都刻意安排了題目。</div>`;
+  app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{
+    const m=b.dataset.m;
+    if(m==='drill') topicPick(); else start(m);
+  });
+}
+
+function topicPick(){
+  app.innerHTML = `<h1>選一個主題</h1>
+    <p class="lede">每個主題抽 6 題，答完一題立刻看詳解。</p>
+    <div class="modes">${DATA.meta.topics.map(t=>{
+      const c = DATA.mc.filter(q=>q.topic===t).length + DATA.calc.filter(q=>q.topic===t).length;
+      return `<button class="mode" data-t="${t}"><b>${t}</b><em>題庫 ${c} 題</em></button>`;
+    }).join('')}</div>
+    <div class="actions"><button class="btn ghost" id="back">回首頁</button></div>`;
+  app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>start('drill', b.dataset.t));
+  $('#back').onclick=home;
+}
+
+/* ── 出卷 ── */
+function start(mode, topic){
+  let mc=[], calc=[], label='';
+  if(mode==='exam'){
+    mc = pickSpread(DATA.mc, 10);
+    calc = pickSpread(DATA.calc, 3);
+    label='模擬測驗';
+  } else if(mode==='drill'){
+    const m=DATA.mc.filter(q=>q.topic===topic), c=DATA.calc.filter(q=>q.topic===topic);
+    mc = shuffle(m).slice(0, Math.min(5, m.length));
+    calc = shuffle(c).slice(0, 1);
+    label='主題練習 · '+topic;
+  } else {
+    const ids=Object.keys(store.wrong);
+    mc = shuffle(DATA.mc.filter(q=>ids.includes(q.id))).slice(0,8);
+    calc = shuffle(DATA.calc.filter(q=>ids.includes(q.id))).slice(0,2);
+    label='錯題複習';
+  }
+  // 每題各自打亂選項，並記住正解搬到哪裡
+  mc = mc.map(q=>{
+    const order = shuffle([0,1,2,3]);
+    return {...q, order, ansAt: order.indexOf(q.ans)};
+  });
+  S = {mode, label, mc, calc, answers:{}, rub:{}, submitted:false, instant: mode!=='exam'};
+  render();
+}
+
+/* ── 繪製 ── */
+function setRail(p){ $('#rail').style.width = Math.max(0,Math.min(100,p))+'%'; }
+
+function render(){
+  const parts=[];
+  parts.push(`<div class="eyebrow">${S.label}</div>
+    <h1>${S.mode==='exam'?'模擬測驗卷':'練習'}</h1>
+    <p class="lede">${S.instant
+      ? '每題作答後會立刻顯示詳解。'
+      : '全部作答完再送出。送出後才會顯示答案與詳解，過程中可以回頭修改。'}</p>`);
+
+  if(S.mc.length){
+    parts.push(`<h2>一、選擇題<span class="unit">（每題 ${fmtPt(50/S.mc.length)} 分，共 ${S.mc.length} 題）</span></h2>`);
+    S.mc.forEach((q,i)=>parts.push(mcHTML(q,i)));
+  }
+  if(S.calc.length){
+    parts.push(`<h2 style="margin-top:28px">二、計算題與簡答題<span class="unit">（每大題 ${fmtPt(50/S.calc.length)} 分，共 ${S.calc.length} 大題）</span></h2>`);
+    S.calc.forEach((q,i)=>parts.push(calcHTML(q,i)));
+  }
+  if(!S.submitted){
+    parts.push(`<div class="actions">
+      <button class="btn" id="submit">送出並批改</button>
+      <button class="btn ghost" id="quit">放棄這份，回首頁</button></div>`);
+  }
+  app.innerHTML = parts.join('');
+  wire();
+  updateStat();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function fmtPt(v){ return (Math.round(v*10)/10).toString(); }
+
+function srcTag(q){
+  return `<span class="tag">${q.src}</span>` + (q.lecture?`<span class="tag lec">講義範例</span>`:'');
+}
+
+function mcHTML(q,i){
+  const a = S.answers[q.id];
+  const done = S.submitted || (S.instant && a!==undefined);
+  const letters=['A','B','C','D'];
+  const opts = q.order.map((oi,k)=>{
+    let cls='opt';
+    if(done){
+      if(k===q.ansAt) cls+=' ok';
+      else if(a===k) cls+=' no';
+    }
+    return `<button class="${cls}" data-q="${q.id}" data-k="${k}" ${done?'disabled':''}
+      aria-pressed="${a===k}"><span class="k">${letters[k]}</span><span class="v">${q.opts[oi]}</span></button>`;
+  }).join('');
+  let sol='';
+  if(done){
+    const right = a===q.ansAt;
+    sol=`<div class="sol ${right?'good':'bad'}"><span class="lab">${
+      a===undefined?'未作答　正解 '+letters[q.ansAt]
+      : right?'答對':'答錯　正解 '+letters[q.ansAt]}</span>${q.exp}</div>`;
+  }
+  return `<section class="q is-mc" id="sec_${q.id}"><div class="qhead"><span class="qno">${i+1}</span>${srcTag(q)}
+    ${done?`<span class="verdict ${a===q.ansAt?'ok':'no'}">${a===q.ansAt?'＋'+fmtPt(50/S.mc.length):'0'} 分</span>`:''}</div>
+    <div class="stem">${q.q}</div>${tableHTML(q.table)}
+    <div class="opts">${opts}</div>${sol}</section>`;
+}
+
+function calcHTML(q,i){
+  const per = 50/S.calc.length/q.parts.length;
+  const body = q.parts.map((p,pi)=>{
+    const key=q.id+'.'+pi, v=S.answers[key];
+    let field, sol='';
+    if(p.type==='num'){
+      field=`<div class="inrow"><input type="text" id="in_${key}" data-k="${key}"
+        value="${v!==undefined?v:''}" placeholder="答案" ${S.submitted?'disabled':''}
+        inputmode="decimal" autocomplete="off">
+        ${p.unit?`<span class="unit">${p.unit}</span>`:''}
+        <span class="tolnote">容許誤差 ±${p.tol}</span></div>`;
+      if(S.submitted){
+        const ok = gradeNum(p, v);
+        sol=`<div class="sol ${ok?'good':'bad'}"><span class="lab">${
+          v===undefined||v===''?'未作答':ok?'答對':'答錯'}　標準答案 ${p.ans}${p.unit||''}</span>
+          ${p.sol}</div>` + (p.wide?tableHTML(p.wide):'');
+      }
+    } else {
+      field=`<textarea id="in_${key}" data-k="${key}" ${S.submitted?'disabled':''}
+        placeholder="請寫出完整句子或列式">${v!==undefined?v:''}</textarea>`;
+      if(S.submitted){
+        const checked = (S.rub[key]||[]);
+        sol=`<div class="sol"><span class="lab">參考答案</span>${p.ref}
+          <ul class="rub">${p.rubric.map((r,ri)=>`<li><input type="checkbox" data-r="${key}" data-ri="${ri}"
+            id="rb_${key}_${ri}" ${checked.includes(ri)?'checked':''}><label for="rb_${key}_${ri}">${r}</label></li>`).join('')}</ul>
+          <div class="tolnote" style="margin-top:8px">勾選你確實寫到的要點，系統依比例給分。</div></div>`;
+      }
+    }
+    let vd='';
+    if(S.submitted){
+      const sc = partScore(q,pi)*per;
+      const cl = sc>=per*0.99?'ok':sc<=0.01?'no':'half';
+      vd=`<span class="verdict ${cl}" id="vd_${key}">${fmtPt(sc)} / ${fmtPt(per)} 分</span>`;
+    }
+    return `<div class="part"><div class="pq"><span class="plab">${p.label}</span>${p.q}${vd}</div>
+      ${field}${sol}</div>`;
+  }).join('');
+  return `<section class="q is-calc"><div class="qhead"><span class="qno">${i+1}</span>${srcTag(q)}
+    <span class="tag">${q.parts.length} 小題</span></div>
+    <div class="stem">${q.stem}</div>${tableHTML(q.table)}${body}
+    ${S.submitted&&q.note?`<div class="note"><span class="lab">考點提醒</span>${q.note}</div>`:''}</section>`;
+}
+
+/* ── 批改 ── */
+function gradeNum(p, v){
+  if(v===undefined||v==='') return false;
+  const x = parseFloat(String(v).replace(/[^0-9.\-+eE]/g,''));
+  return isFinite(x) && Math.abs(x - p.ans) <= p.tol + 1e-12;
+}
+function partScore(q, pi){        // 回傳 0~1
+  const p=q.parts[pi], key=q.id+'.'+pi;
+  if(p.type==='num') return gradeNum(p, S.answers[key])?1:0;
+  const c=(S.rub[key]||[]).length;
+  return p.rubric.length ? c/p.rubric.length : 0;
+}
+function totals(){
+  let mcPts=0, mcMax=S.mc.length?50:0;
+  if(S.mc.length){ const per=50/S.mc.length;
+    S.mc.forEach(q=>{ if(S.answers[q.id]===q.ansAt) mcPts+=per; }); }
+  let cPts=0, cMax=S.calc.length?50:0;
+  if(S.calc.length){ const per=50/S.calc.length;
+    S.calc.forEach(q=>{ let s=0; q.parts.forEach((p,pi)=>s+=partScore(q,pi));
+      cPts += per * s/q.parts.length; }); }
+  const max = mcMax+cMax || 1;
+  return {mcPts, mcMax, cPts, cMax, score: Math.round((mcPts+cPts)/max*100)};
+}
+function topicStats(){
+  const m={};
+  const add=(t,got,of)=>{ (m[t]=m[t]||{g:0,o:0}); m[t].g+=got; m[t].o+=of; };
+  S.mc.forEach(q=>add(q.topic, S.answers[q.id]===q.ansAt?1:0, 1));
+  S.calc.forEach(q=>{ let s=0; q.parts.forEach((p,pi)=>s+=partScore(q,pi));
+    add(q.topic, s, q.parts.length); });
+  return m;
+}
+
+function updateStat(){
+  const tot = S.mc.length + S.calc.reduce((a,q)=>a+q.parts.length,0);
+  let done = S.mc.filter(q=>S.answers[q.id]!==undefined).length;
+  S.calc.forEach(q=>q.parts.forEach((p,pi)=>{ const v=S.answers[q.id+'.'+pi]; if(v!==undefined&&v!=='') done++; }));
+  $('#hstat').textContent = S.submitted ? '已批改' : `已作答 ${done} / ${tot}`;
+  setRail(done/tot*100);
+}
+
+function refreshVerdict(key){
+  const qid = key.slice(0, key.lastIndexOf('.')), pi = +key.slice(key.lastIndexOf('.')+1);
+  const q = S.calc.find(x=>x.id===qid); if(!q) return;
+  const el = document.getElementById('vd_'+key); if(!el) return;
+  const per = 50/S.calc.length/q.parts.length, sc = partScore(q,pi)*per;
+  el.className = 'verdict ' + (sc>=per*0.99?'ok':sc<=0.01?'no':'half');
+  el.textContent = fmtPt(sc)+' / '+fmtPt(per)+' 分';
+}
+
+function wire(){
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    const qid=b.dataset.q;
+    S.answers[qid] = +b.dataset.k;
+    if(S.instant){
+      // 只重畫這一題，不動整頁，避免捲動位置與其他題的作答游標被重設
+      const idx=S.mc.findIndex(x=>x.id===qid);
+      const sec=document.getElementById('sec_'+qid);
+      if(sec){ sec.outerHTML = mcHTML(S.mc[idx], idx); }
+      updateStat();
+    } else {
+      const g=b.parentElement;
+      g.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-pressed', o===b));
+      updateStat();
+    }
+  });
+  app.querySelectorAll('input[type=text],textarea').forEach(el=>{
+    el.oninput=()=>{ S.answers[el.dataset.k]=el.value; updateStat(); };
+  });
+  app.querySelectorAll('input[type=checkbox][data-r]').forEach(cb=>{
+    cb.onchange=()=>{
+      const k=cb.dataset.r, ri=+cb.dataset.ri;
+      const arr=new Set(S.rub[k]||[]);
+      cb.checked?arr.add(ri):arr.delete(ri);
+      S.rub[k]=[...arr];
+      refreshVerdict(k);
+      showScore(true);
+    };
+  });
+  const sb=$('#submit'); if(sb) sb.onclick=submit;
+  const qb=$('#quit'); if(qb) qb.onclick=()=>{ if(S.instant||confirmLeave()) home(); };
+}
+function confirmLeave(){ return true; }
+
+function submit(){
+  S.submitted=true;
+  // 更新錯題本
+  S.mc.forEach(q=>{
+    if(S.answers[q.id]===q.ansAt){ bumpRight(q.id); } else { store.wrong[q.id]=true; }
+  });
+  S.calc.forEach(q=>{
+    let s=0; q.parts.forEach((p,pi)=>s+=partScore(q,pi));
+    if(s/q.parts.length>=0.8) bumpRight(q.id); else store.wrong[q.id]=true;
+  });
+  save();
+  render();
+  showScore(false);
+}
+function bumpRight(id){
+  store.seen[id]=(store.seen[id]||0)+1;
+  if(store.seen[id]>=2) delete store.wrong[id];
+}
+
+function showScore(update){
+  const t=totals(), ts=topicStats();
+  const bars = Object.entries(ts).map(([k,v])=>{
+    const pc = v.o? v.g/v.o*100 : 0;
+    const cl = pc>=80?'':pc>=60?'warn':'poor';
+    return `<div class="bar"><span class="nm" title="${k}">${k}</span>
+      <span class="tr"><i class="${cl}" style="width:${pc.toFixed(0)}%"></i></span>
+      <span class="pc">${pc.toFixed(0)}%</span></div>`;
+  }).join('');
+  const weak = Object.entries(ts).filter(([,v])=>v.o&&v.g/v.o<0.6).map(([k])=>k);
+  const txt = S.calc.flatMap(q=>q.parts.map((p,pi)=>({q,p,pi}))).filter(o=>o.p.type==='text');
+  const unmarked = txt.filter(o=>!(S.rub[o.q.id+'.'+o.pi]||[]).length).length;
+  const selfNote = unmarked ? `<div class="note" style="margin-top:16px"><span class="lab">還有 ${unmarked} 小題沒自評</span>
+    簡答題沒辦法自動批改，目前以 0 分計。請往下看每一題的參考答案，把你確實寫到的評分要點勾起來，分數會立刻更新。</div>` : '';
+  const html = `<div class="score">
+    <div class="eyebrow">${S.label}</div>
+    <div class="big"><span class="n">${t.score}</span><span class="d">/ 100 分</span></div>
+    <div class="split">
+      <div class="sp"><div class="t">一、選擇題</div><div class="v">${fmtPt(t.mcPts)} <span class="unit">/ ${t.mcMax}</span></div></div>
+      <div class="sp"><div class="t">二、計算與簡答</div><div class="v">${fmtPt(t.cPts)} <span class="unit">/ ${t.cMax}</span></div></div>
+    </div>
+    <div class="bars">${bars}</div>
+    ${selfNote}
+    ${weak.length?`<div class="note" style="margin-top:16px"><span class="lab">建議加強</span>
+      ${weak.join('、')} —— 回去看這幾題標註的投影片頁碼，再用「主題練習」針對它做一輪。</div>`:
+      `<div class="note" style="margin-top:16px"><span class="lab">狀況不錯</span>
+      五個主題都在水準之上。可以換一份新的模擬測驗，題目會重抽。</div>`}
+    <div class="actions">
+      <button class="btn" id="again">再來一份（重新抽題）</button>
+      <button class="btn ghost" id="hm">回首頁</button>
+    </div>
+    <div class="hist">錯題本目前 <span class="num">${Object.keys(store.wrong).length}</span> 題　·
+      累計練習 <span class="num">${store.hist.length}</span> 次</div>
+  </div>`;
+  const old=$('.score');
+  if(old){ old.outerHTML=html; } else { app.insertAdjacentHTML('afterbegin', html); }
+  $('#again').onclick=()=>start(S.mode, S.label.split(' · ')[1]);
+  $('#hm').onclick=home;
+  if(!update){
+    store.hist.push({score:t.score, label:S.label, at:Date.now()});
+    if(store.hist.length>50) store.hist=store.hist.slice(-50);
+    save();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  updateStat();
+}
+
+$('#fratio').textContent = Math.round(DATA.meta.lecture_ratio*100)+'%';
+home();
+</script>

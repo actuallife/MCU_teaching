@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>教材總覽 · 林漢洲</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+/* 版面：單欄清單。沿用複習網站的深藍＋赭金配色，讓總覽頁與各單元看起來是同一套教材 */
+:root{
+  --ink:#16181d; --ink-2:#4a5468; --ink-3:#737f94;
+  --paper:#fbfbfc; --card:#ffffff; --line:#dfe3ea;
+  --navy:#1f3864; --navy-soft:#eef1f7; --gold:#c47f17;
+  --shadow:0 1px 2px rgba(31,56,100,.06), 0 6px 20px -12px rgba(31,56,100,.22);
+  --f-head:"Noto Serif TC","Songti TC",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ink:#e8ecf3; --ink-2:#aab4c6; --ink-3:#7e8a9e;
+  --paper:#12151b; --card:#191d25; --line:#2b313c;
+  --navy:#9db4dc; --navy-soft:#1c2433; --gold:#e0a84e;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --ink:#e8ecf3; --ink-2:#aab4c6; --ink-3:#7e8a9e;
+  --paper:#12151b; --card:#191d25; --line:#2b313c;
+  --navy:#9db4dc; --navy-soft:#1c2433; --gold:#e0a84e;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);
+  font-size:15px;line-height:1.75;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:46px 56px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:500;margin-bottom:8px}
+h1{font-family:var(--f-head);font-size:28px;line-height:1.35;margin:0 0 10px;text-wrap:balance}
+.lede{color:var(--ink-2);margin:0 0 30px}
+h2{font-family:var(--f-head);font-size:15px;color:var(--ink-2);margin:0 0 12px;
+  padding-bottom:7px;border-bottom:1px solid var(--line);font-weight:600}
+.item{display:block;text-decoration:none;color:inherit;background:var(--card);
+  border:1px solid var(--line);border-left:3px solid var(--navy);border-radius:3px;
+  box-shadow:var(--shadow);padding:16px 18px;margin-bottom:12px;
+  transition:transform .15s,border-left-color .15s}
+.item:hover{transform:translateY(-1px);border-left-color:var(--gold)}
+.item:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.item .t{font-family:var(--f-head);font-size:17px;font-weight:700;margin-bottom:3px}
+.item .d{font-size:13px;color:var(--ink-2);line-height:1.65}
+.item .m{font-size:11.5px;color:var(--ink-3);margin-top:7px;font-variant-numeric:tabular-nums}
+.chip{display:inline-block;font-size:11px;color:var(--navy);background:var(--navy-soft);
+  padding:1px 8px;border-radius:99px;margin-right:6px}
+footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--ink-3);line-height:1.8}
+footer a{color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">銘傳大學 資訊管理學系</div>
+  <h1>課程教材</h1>
+  <p class="lede">林漢洲　教學用互動教材與複習工具。選一個單元開始。</p>
+
+  <h2>統計學（一）</h2>
+  <a class="item" href="statistics/ch5-discrete-distributions/">
+    <div class="t">第 5 章　離散機率分配</div>
+    <div class="d">期中考複習網站。模擬測驗、主題練習、錯題複習三種模式，
+      每次重新抽題，數值題自動批改，每題附完整詳解與出處投影片頁碼。</div>
+    <div class="m"><span class="chip">39 題</span>選擇題 50%　計算與簡答 50%</div>
+  </a>
+
+  <footer>
+    原始碼與題庫：<a href="https://github.com/actuallife/MCU_teaching">github.com/actuallife/MCU_teaching</a><br>
+    作答紀錄只存在你自己的瀏覽器，不會上傳到任何伺服器。
+  </footer>
+</div>
+</body>
+</html>
