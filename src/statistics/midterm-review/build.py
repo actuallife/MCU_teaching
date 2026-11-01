@@ -20,7 +20,7 @@
       Claude Artifact 發布時會自行包上外殼，用這個版本才不會重複。
 
 用法（在本資料夾內執行）：
-    python3 bank.py      # 產生 questions.json，含 24 項驗證
+    python3 build_bank.py   # 產生 questions.json，含 121 項驗證
     python3 build.py     # 產生網站
 """
 
@@ -96,7 +96,7 @@ def main():
     args = ap.parse_args()
 
     if not QUESTIONS.exists():
-        sys.exit(f"找不到 {QUESTIONS.name}，請先執行：python3 bank.py")
+        sys.exit(f"找不到 {QUESTIONS.name}，請先執行：python3 build_bank.py")
 
     data = json.loads(QUESTIONS.read_text(encoding="utf-8"))
     tpl = TEMPLATE.read_text(encoding="utf-8")

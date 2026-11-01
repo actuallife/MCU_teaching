@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>統計學期中考複習</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+/* 版面：單欄答案卷。頁首進度軌 → 模式選擇 → 題卡（左側導航色標尺）→ 成績與弱點分析 */
+:root{
+  --ink:#16181d; --ink-2:#4a5468; --ink-3:#737f94;
+  --paper:#fbfbfc; --card:#ffffff; --line:#dfe3ea; --line-2:#eceff4;
+  --navy:#1f3864; --navy-soft:#eef1f7;
+  --gold:#c47f17; --gold-soft:#fdf4e8;
+  --good:#1a7f52; --good-soft:#e9f5ef;
+  --bad:#b3261e; --bad-soft:#fdeceb;
+  --shadow:0 1px 2px rgba(31,56,100,.06), 0 6px 20px -12px rgba(31,56,100,.22);
+  --on-navy:#ffffff;
+  --f-head:"Noto Serif TC", "Songti TC", serif;
+  --f-body:"Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --f-num:ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ink:#e8ecf3; --ink-2:#aab4c6; --ink-3:#7e8a9e;
+  --paper:#12151b; --card:#191d25; --line:#2b313c; --line-2:#222833;
+  --navy:#9db4dc; --navy-soft:#1c2433;
+  --gold:#e0a84e; --gold-soft:#2a2316;
+  --good:#5ec294; --good-soft:#15271f;
+  --bad:#f08a82; --bad-soft:#2b1917;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.7);
+  --on-navy:#12151b;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --ink:#e8ecf3; --ink-2:#aab4c6; --ink-3:#7e8a9e;
+  --paper:#12151b; --card:#191d25; --line:#2b313c; --line-2:#222833;
+  --navy:#9db4dc; --navy-soft:#1c2433;
+  --gold:#e0a84e; --gold-soft:#2a2316;
+  --good:#5ec294; --good-soft:#15271f;
+  --bad:#f08a82; --bad-soft:#2b1917;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -14px rgba(0,0,0,.7);
+  --on-navy:#12151b;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);
+  font-size:15px;line-height:1.75;-webkit-text-size-adjust:100%}
+.wrap{max-width:820px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 56px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
+  z-index:20;background:var(--paper)}
+
+/* ── 頁首 ── */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:15;background:var(--paper);
+  border-bottom:1px solid var(--line);margin-bottom:26px}
+.hrow{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:11px}
+.brand{font-family:var(--f-head);font-weight:700;font-size:16px;color:var(--navy);
+  letter-spacing:.01em;white-space:nowrap}
+.brand small{display:block;font-family:var(--f-body);font-weight:400;font-size:11px;
+  color:var(--ink-3);letter-spacing:.04em}
+.hspace{flex:1;min-width:0}
+.hstat{font-family:var(--f-num);font-size:12px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.rail{height:3px;background:var(--line-2)}
+.rail > i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s ease}
+
+/* ── 共用 ── */
+h1{font-family:var(--f-head);font-size:27px;line-height:1.35;margin:4px 0 8px;
+  text-wrap:balance;letter-spacing:.01em}
+h2{font-family:var(--f-head);font-size:19px;margin:0 0 12px;text-wrap:balance}
+p{margin:0 0 12px}
+.lede{color:var(--ink-2);margin-bottom:22px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:500;margin-bottom:6px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 18px;border-radius:7px;border:1px solid var(--navy);background:var(--navy);
+  color:var(--on-navy);font-weight:500;font-size:14px;transition:opacity .15s}
+.btn:hover{opacity:.86}
+.btn.ghost{background:transparent;color:var(--navy);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--navy);opacity:1}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── 模式卡 ── */
+.modes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-bottom:26px}
+.mode{display:flex;flex-direction:column;gap:5px;text-align:left;padding:16px 17px;
+  background:var(--card);border:1px solid var(--line);border-left:3px solid var(--navy);
+  border-radius:3px;box-shadow:var(--shadow);transition:transform .15s,border-color .15s;min-width:0}
+.mode:hover{transform:translateY(-1px);border-left-color:var(--gold)}
+.mode:disabled{opacity:.45}
+.mode b{font-family:var(--f-head);font-size:16px;color:var(--ink)}
+.mode span{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.mode em{font-style:normal;font-family:var(--f-num);font-size:11px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums}
+
+/* ── 題卡 ── */
+.q{background:var(--card);border:1px solid var(--line);border-radius:3px;
+  box-shadow:var(--shadow);padding:20px 20px 18px;margin-bottom:16px;
+  border-left:3px solid var(--line);min-width:0}
+.q.is-mc{border-left-color:var(--navy)}
+.q.is-calc{border-left-color:var(--gold)}
+.qhead{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:11px}
+.qno{font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--navy);
+  background:var(--navy-soft);padding:2px 8px;border-radius:3px;font-variant-numeric:tabular-nums}
+.tag{font-size:11px;color:var(--ink-3);border:1px solid var(--line);
+  padding:1px 7px;border-radius:99px;white-space:nowrap}
+.tag.lec{color:var(--gold);border-color:var(--gold)}
+.stem{margin-bottom:13px;line-height:1.8}
+.stem b{color:var(--navy)}
+
+/* 表格 */
+.tw{overflow-x:auto;margin:0 0 14px;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;font-size:13px;min-width:100%;
+  font-variant-numeric:tabular-nums;font-family:var(--f-num)}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:center;white-space:nowrap}
+th{background:var(--navy-soft);color:var(--navy);font-weight:700}
+td:first-child,th:first-child{text-align:left;font-family:var(--f-body);font-weight:500}
+
+/* 選項 */
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border:1px solid var(--line);
+  border-radius:5px;background:transparent;text-align:left;line-height:1.65;font-size:14.5px;
+  color:var(--ink);transition:border-color .12s,background .12s;width:100%;min-width:0}
+.opt:hover:not(:disabled){border-color:var(--navy)}
+.opt .k{font-family:var(--f-num);font-weight:700;color:var(--ink-3);flex:none}
+.opt .v{min-width:0;flex:1}
+.opt[aria-pressed="true"]{border-color:var(--navy);background:var(--navy-soft)}
+.opt[aria-pressed="true"] .k{color:var(--navy)}
+.opt.ok{border-color:var(--good);background:var(--good-soft)}
+.opt.ok .k{color:var(--good)}
+.opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.opt.no .k{color:var(--bad)}
+.opt:disabled{cursor:default}
+
+/* 計算題小題 */
+.part{border-top:1px solid var(--line-2);padding-top:13px;margin-top:13px}
+.part:first-of-type{border-top:0;margin-top:0}
+.plab{font-family:var(--f-num);font-weight:700;color:var(--navy);margin-right:6px}
+.pq{margin-bottom:9px;line-height:1.75}
+.inrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+input[type=text]{font:inherit;font-family:var(--f-num);font-variant-numeric:tabular-nums;
+  padding:8px 11px;border:1px solid var(--line);border-radius:5px;background:var(--card);
+  color:var(--ink);width:150px;max-width:100%}
+input[type=text]:focus{border-color:var(--navy)}
+textarea{font:inherit;width:100%;min-height:76px;padding:9px 11px;border:1px solid var(--line);
+  border-radius:5px;background:var(--card);color:var(--ink);resize:vertical;line-height:1.7}
+textarea:focus{border-color:var(--navy)}
+.unit{font-size:13px;color:var(--ink-3)}
+.tolnote{font-size:11.5px;color:var(--ink-3);font-family:var(--f-num)}
+
+/* 詳解 */
+.sol{margin-top:11px;padding:12px 14px;border-radius:5px;font-size:13.5px;line-height:1.8;
+  background:var(--navy-soft);border-left:3px solid var(--navy)}
+.sol.good{background:var(--good-soft);border-left-color:var(--good)}
+.sol.bad{background:var(--bad-soft);border-left-color:var(--bad)}
+.sol .lab{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:5px;font-weight:500}
+.sol b{color:var(--navy)}
+.sol.good b{color:var(--good)}
+.sol.bad b{color:var(--bad)}
+.note{margin-top:11px;padding:11px 14px;border-radius:5px;background:var(--gold-soft);
+  border-left:3px solid var(--gold);font-size:13px;line-height:1.75}
+.note .lab{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:4px;font-weight:700}
+.rub{margin:9px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.rub li{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.65}
+.rub input{margin:4px 0 0;flex:none;accent-color:var(--good);width:15px;height:15px}
+.verdict{font-family:var(--f-num);font-size:12px;font-weight:700;padding:1px 8px;
+  border-radius:3px;margin-left:auto;white-space:nowrap}
+.verdict.ok{color:var(--good);background:var(--good-soft)}
+.verdict.no{color:var(--bad);background:var(--bad-soft)}
+.verdict.half{color:var(--gold);background:var(--gold-soft)}
+
+/* ── 成績 ── */
+.score{background:var(--card);border:1px solid var(--line);border-radius:3px;
+  box-shadow:var(--shadow);padding:22px;margin-bottom:18px;border-top:3px solid var(--navy)}
+.big{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.big .n{font-family:var(--f-num);font-size:46px;font-weight:700;line-height:1;
+  color:var(--navy);font-variant-numeric:tabular-nums}
+.big .d{font-size:13px;color:var(--ink-2)}
+.split{display:grid;gap:10px;grid-template-columns:1fr 1fr;margin:16px 0 4px}
+.sp{padding:11px 13px;border:1px solid var(--line);border-radius:4px;min-width:0}
+.sp .t{font-size:11.5px;color:var(--ink-3);margin-bottom:3px}
+.sp .v{font-family:var(--f-num);font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+.bars{margin-top:18px;display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:minmax(0,9.5em) 1fr auto;gap:10px;align-items:center;font-size:12.5px}
+.bar .nm{color:var(--ink-2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .tr{height:7px;background:var(--line-2);border-radius:99px;overflow:hidden;min-width:0}
+.bar .tr i{display:block;height:100%;border-radius:99px;background:var(--good)}
+.bar .tr i.warn{background:var(--gold)}
+.bar .tr i.poor{background:var(--bad)}
+.bar .pc{font-family:var(--f-num);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.hist{font-size:12.5px;color:var(--ink-2);margin-top:14px;padding-top:12px;border-top:1px solid var(--line-2)}
+.hist .num{color:var(--ink)}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--ink-3);line-height:1.8}
+@media (max-width:460px){
+  .split{grid-template-columns:1fr}
+  .big .n{font-size:38px}
+  h1{font-size:23px}
+  .bar{grid-template-columns:minmax(0,6.5em) 1fr auto}
+}
+</style></head>
+<body>
+
+
+<header>
+  <div class="hrow">
+    <div class="brand">期中考複習<small>統計學（一）· 第 1 – 5 章</small></div>
+    <div class="hspace"></div>
+    <div class="hstat" id="hstat"></div>
+  </div>
+  <div class="rail"><i id="rail"></i></div>
+</header>
+
+<div class="wrap">
+  <main id="app"></main>
+  <footer>
+    題目取材自第 1 – 5 章課堂講義與作業，<span class="num" id="fratio"></span> 為講義範例的相似題（換情境、換數字，解法結構相同）。<br>
+    計分方式對應期中考：選擇題 50 分、計算與簡答題 50 分。數值題自動批改，簡答題依評分要點自評。<br>
+    統計學（一）· 銘傳大學資訊管理學系 · 林漢洲
+  </footer>
+</div>
+
+<script>
+const DATA = {"meta":{"course":"統計學（一）","scope":"期中考範圍　第 1 – 5 章","chapters":[{"ch":1,"name":"統計概論與資料","n_mc":10,"n_calc":2},{"ch":2,"name":"敘述統計：表格與圖形","n_mc":10,"n_calc":3},{"ch":3,"name":"敘述統計：數值量數","n_mc":20,"n_calc":5},{"ch":4,"name":"機率基礎概念","n_mc":18,"n_calc":5},{"ch":5,"name":"離散機率分配","n_mc":28,"n_calc":11}],"n_mc":86,"n_calc":26,"n_parts":117,"n_num":80,"n_text":37,"lecture_ratio":0.7679,"topics":["z 分數與相對位置","二項分配","五數彙總與箱形圖","位置量數","元素、變數與資料集","兩個變數的整理","分配選擇與綜合判斷","加法律與互斥","卜瓦松分配","數量資料的整理","期望值與變異數","條件機率","母體、樣本與統計推論","測量尺度","獨立與乘法律","百分位數與四分位數","相關性量數","累積次數與分配形狀","計數法則與機率指派","貝氏定理","資料的型態","隨機變數與機率分配","離散量數","類別資料的整理"]},"mc":[{"id":"A01","ch":1,"chapter":"統計概論與資料","topic":"元素、變數與資料集","src":"作業 1　開放資料集的元素與測量尺度","lecture":true,"q":"某份縣市人口統計資料共有 22 列，每一列記錄一個縣市，欄位包含：縣市名稱、行政區數、人口數、人口密度、都市化程度（高／中／低）。這份資料的「元素」是什麼？","table":null,"opts":["每一個欄位","每一個縣市","整張表格","22 這個數字"],"ans":1,"exp":"\u003cb>元素（element）是被蒐集資料的那個對象\u003c/b>。這份表一列代表一個縣市，所以元素就是縣市，共 22 個元素。\u003cbr>欄位是\u003cb>變數\u003c/b>（5 個），整張表是\u003cb>資料集\u003c/b>，而某一個縣市在某一個欄位上的值叫\u003cb>觀察值\u003c/b>。\u003cbr>判斷訣竅：問自己「這張表一列在講誰」，答案就是元素。"},{"id":"A02","ch":1,"chapter":"統計概論與資料","topic":"元素、變數與資料集","src":"作業 1　開放資料集的元素與測量尺度","lecture":true,"q":"承上題（22 個縣市、5 個欄位），這份資料集共有多少個觀察值？","table":null,"opts":["22","5","110","27"],"ans":2,"exp":"一個元素在一個變數上的值就是一個觀察值，所以是 22 × 5 = \u003cb>110\u003c/b> 個。\u003cbr>（課本有時也把「一個元素的整列資料」稱為一筆觀察值，那樣算是 22 筆。考試時看題目問的是「幾個觀察值」還是「幾筆觀察」，但\u003cb>元素 22、變數 5\u003c/b> 這兩個數字不會變。）"},{"id":"A03","ch":1,"chapter":"統計概論與資料","topic":"測量尺度","src":"作業 1　開放資料集的元素與測量尺度","lecture":true,"q":"下列哪一個變數屬於\u003cb>順序尺度\u003c/b>（ordinal）？","table":null,"opts":["縣市名稱","人口數","都市化程度（高／中／低）","人口密度"],"ans":2,"exp":"\u003cb>順序尺度\u003c/b>的值可以排出高低，但\u003cb>相鄰等級之間的差距沒有意義\u003c/b>。「高／中／低」能排序，可是沒辦法說「高減中」等於多少。\u003cbr>縣市名稱只是標籤 → 名目；人口數與人口密度有絕對零點、可以做比值 → 比率。"},{"id":"A04","ch":1,"chapter":"統計概論與資料","topic":"測量尺度","src":"W1 統計概論　課本 1.2 – 1.4","lecture":false,"q":"攝氏溫度屬於哪一種測量尺度？","table":null,"opts":["名目尺度","順序尺度","區間尺度","比率尺度"],"ans":2,"exp":"\u003cb>區間尺度\u003c/b>：差距有意義（20°C 比 10°C 高 10 度），但\u003cb>零點是人為訂的，不代表「沒有」\u003c/b>，所以比值沒有意義 —— 不能說 20°C 是 10°C 的「兩倍熱」。\u003cbr>典型的區間尺度還有西元年份、智力測驗分數。若改成\u003cb>絕對溫度（K）\u003c/b>就有絕對零點，變成比率尺度。"},{"id":"A05","ch":1,"chapter":"統計概論與資料","topic":"測量尺度","src":"作業 1　開放資料集的元素與測量尺度","lecture":true,"q":"某便利商店的交易紀錄欄位為：交易編號、付款方式、消費金額、來店時段、滿意度（1–5 分）。其中「消費金額」與「滿意度（1–5 分）」分別屬於什麼尺度？","table":null,"opts":["比率尺度、順序尺度","區間尺度、順序尺度","比率尺度、區間尺度","順序尺度、名目尺度"],"ans":0,"exp":"\u003cb>消費金額\u003c/b>有絕對零點（0 元就是沒有消費），而且 200 元確實是 100 元的兩倍 → \u003cb>比率尺度\u003c/b>。\u003cbr>\u003cb>滿意度 1–5 分\u003c/b>雖然寫成數字，但 4 分與 5 分的差距、和 1 分與 2 分的差距不保證一樣，也不能說 4 分是 2 分的兩倍滿意 → \u003cb>順序尺度\u003c/b>。\u003cbr>這是最常被判錯的一組：\u003cb>寫成數字不代表就是數量資料\u003c/b>。"},{"id":"A06","ch":1,"chapter":"統計概論與資料","topic":"測量尺度","src":"作業 1　開放資料集的元素與測量尺度","lecture":true,"q":"判斷測量尺度時，下列哪一個問題最能分辨「區間尺度」與「比率尺度」？","table":null,"opts":["這個變數是不是文字？","零是不是代表「完全沒有」，兩個值相除有沒有意義？","這個變數能不能排序？","資料筆數夠不夠多？"],"ans":1,"exp":"四種尺度是層層累加的：\u003cbr>\u003cb>名目\u003c/b>只能分類 → \u003cb>順序\u003c/b>再加上可排序 → \u003cb>區間\u003c/b>再加上差距有意義 → \u003cb>比率\u003c/b>再加上有絕對零點、比值有意義。\u003cbr>所以區間與比率的唯一分界就是\u003cb>零點是不是絕對的\u003c/b>。年齡 0 歲代表剛出生（真的沒有），是比率；西元 0 年不代表沒有時間，是區間。"},{"id":"A07","ch":1,"chapter":"統計概論與資料","topic":"資料的型態","src":"W1 統計概論　課本 1.2 – 1.4","lecture":false,"q":"下列關於「類別資料」與「數量資料」的敘述，何者正確？","table":null,"opts":["名目與順序尺度是類別資料；區間與比率尺度是數量資料","只要寫成數字就是數量資料","類別資料不能計算次數","數量資料不能畫長條圖"],"ans":0,"exp":"\u003cb>名目＋順序 → 類別資料；區間＋比率 → 數量資料。\u003c/b>\u003cbr>關鍵在\u003cb>有沒有意義做算術\u003c/b>，不在長得像不像數字。學號是數字但屬名目；滿意度 1–5 分是數字但屬順序，兩者都是類別資料。\u003cbr>類別資料可以算次數與百分比（這是第 2 章的次數分配）；數量資料才可以算平均數與標準差（第 3 章）。"},{"id":"A08","ch":1,"chapter":"統計概論與資料","topic":"資料的型態","src":"W1 統計概論　課本 1.2 – 1.4","lecture":false,"q":"某公司蒐集「2026 年 9 月全台 350 家門市的當月營業額」，這屬於哪一種資料？","table":null,"opts":["時間數列資料","橫斷面資料","實驗資料","順序尺度資料"],"ans":1,"exp":"\u003cb>橫斷面資料\u003c/b>：同一個時間點、蒐集多個不同元素的資料。這裡時間固定在 2026 年 9 月，元素是 350 家門市。\u003cbr>若改成「某一家門市從 2020 到 2026 年的每月營業額」，就變成\u003cb>時間數列資料\u003c/b> —— 同一個元素、沿著時間蒐集。"},{"id":"A09","ch":1,"chapter":"統計概論與資料","topic":"母體、樣本與統計推論","src":"W1 統計概論　課本 1.2 – 1.4","lecture":false,"q":"某研究想了解全校 12,000 位學生的平均每週讀書時數，實際訪問了 300 位。關於這 300 位算出的平均值，正確的說法是？","table":null,"opts":["這是母體參數，記為 μ","這是樣本統計量，記為 x̄，用來推論母體參數 μ","這是母體參數，記為 x̄","樣本太小，算出來的平均數沒有任何意義"],"ans":1,"exp":"由\u003cb>樣本\u003c/b>算出來的叫\u003cb>統計量\u003c/b>，用 x̄、s 表示；由\u003cb>母體\u003c/b>算出來的叫\u003cb>參數\u003c/b>，用 μ、σ 表示。\u003cbr>母體參數 μ 通常是未知的，統計推論的目的就是用 x̄ 去估計 μ —— 這是第 10 週之後整學期的主軸。\u003cbr>\u003cb>符號不要混用\u003c/b>：x̄ 與 μ 寫錯是期中考最常見的失分點之一。"},{"id":"A10","ch":1,"chapter":"統計概論與資料","topic":"母體、樣本與統計推論","src":"W1 統計概論　課本 1.2 – 1.4","lecture":false,"q":"下列哪一項屬於「推論統計」而不是「敘述統計」？","table":null,"opts":["計算 300 位受訪學生的平均讀書時數","畫出 300 位受訪學生讀書時數的直方圖","由 300 位樣本推估全校 12,000 位學生的平均讀書時數區間","整理 300 份問卷的次數分配表"],"ans":2,"exp":"\u003cb>敘述統計\u003c/b>是整理與呈現「手上這批資料」—— 平均數、圖表、次數分配都屬於這一類，也就是本學期第 1 到 3 章在做的事。\u003cbr>\u003cb>推論統計\u003c/b>是從樣本去講母體 —— 估計、區間、檢定，是第 10 週之後的內容。\u003cbr>分界點就是一句話：\u003cb>結論有沒有超出手上這批資料\u003c/b>。"},{"id":"B01","ch":2,"chapter":"敘述統計：表格與圖形","topic":"類別資料的整理","src":"W2 敘述統計：表格與圖形","lecture":true,"q":"某電商統計 200 筆訂單的付款方式如下表。「行動支付」的相對次數是多少？","table":{"head":["付款方式","信用卡","行動支付","貨到付款","ATM 轉帳","合計"],"rows":[["次數","88","56","36","20","200"]]},"opts":["0.28","0.44","56","28"],"ans":0,"exp":"相對次數 = 該類別次數 ÷ 總數 = 56 ÷ 200 = \u003cb>0.28\u003c/b>。\u003cbr>相對次數一定介於 0 與 1 之間，全部加起來等於 1。若要寫成百分比次數，再乘 100 → 28%。\u003cbr>選項 C 是「次數」不是「相對次數」，選項 D 是百分比，單位不同。"},{"id":"B02","ch":2,"chapter":"敘述統計：表格與圖形","topic":"類別資料的整理","src":"W2 敘述統計：表格與圖形","lecture":true,"q":"承上題，若把這份資料畫成圓餅圖，「信用卡」那一塊的圓心角是幾度？","table":null,"opts":["158.4°","88°","44°","9°"],"ans":0,"exp":"圓餅圖的圓心角 = 相對次數 × 360°。\u003cbr>信用卡的相對次數 = 88 ÷ 200 = 0.44，圓心角 = 0.44 × 360° = \u003cb>158.4°\u003c/b>。\u003cbr>檢查：四塊角度加起來必須剛好 360°。"},{"id":"B03","ch":2,"chapter":"敘述統計：表格與圖形","topic":"數量資料的整理","src":"W2 敘述統計：表格與圖形","lecture":true,"q":"長條圖（bar chart）與直方圖（histogram）最主要的差別是什麼？","table":null,"opts":["長條圖只能畫兩個類別，直方圖可以畫很多組","長條圖用於類別資料、長條之間要分開；直方圖用於數量資料、長條之間必須相鄰","長條圖是橫的，直方圖是直的","兩者完全相同，只是名稱不同"],"ans":1,"exp":"\u003cb>長條圖\u003c/b>畫的是\u003cb>類別資料\u003c/b>，各類別之間沒有連續性，所以長條\u003cb>要留空隙\u003c/b>。\u003cbr>\u003cb>直方圖\u003c/b>畫的是\u003cb>數量資料\u003c/b>的分組次數，各組在數線上是連續相接的，所以長條\u003cb>必須緊貼\u003c/b>，中間不留空。\u003cbr>這個空隙不是美觀問題，而是在表達「資料是不是連續的」。考試很愛考這一點。"},{"id":"B04","ch":2,"chapter":"敘述統計：表格與圖形","topic":"數量資料的整理","src":"W2 敘述統計：表格與圖形","lecture":true,"q":"某客服中心記錄 30 通電話的處理時間（分鐘），最短 2 分、最長 29 分。若決定分成 6 組，組距應該訂多少最適當？","table":null,"opts":["5","27","4.5","6"],"ans":0,"exp":"組距的概略算法：\u003cb>（最大值 − 最小值）÷ 組數\u003c/b>，再\u003cb>向上取整\u003c/b>到好記的數字。\u003cbr>（29 − 2）÷ 6 = 27 ÷ 6 = 4.5 → 取 \u003cb>5\u003c/b> 分。\u003cbr>一定要\u003cb>向上\u003c/b>取整，取 4.5 或更小會蓋不住全部資料，最大值會掉在組外。\u003cbr>（課本建議：資料少於 50 筆時用 5–6 組，資料越多組數可以越多。）"},{"id":"B05","ch":2,"chapter":"敘述統計：表格與圖形","topic":"累積次數與分配形狀","src":"W2 敘述統計：表格與圖形","lecture":true,"q":"某組資料的直方圖右側拖出一條長長的尾巴，左側則陡峭集中。這個分配是？","table":null,"opts":["左偏（負偏）","右偏（正偏）","對稱","無法判斷"],"ans":1,"exp":"\u003cb>尾巴拖向哪一邊，就叫偏向哪一邊。\u003c/b>尾巴在右 → \u003cb>右偏（正偏）\u003c/b>。\u003cbr>右偏時少數極大值會把平均數往右拉，所以通常\u003cb>平均數 > 中位數 > 眾數\u003c/b>。\u003cbr>薪資、房價、交易金額、服務時間都是典型的右偏資料 —— 這也是為什麼政府公布所得時用\u003cb>中位數\u003c/b>而不是平均數。"},{"id":"B06","ch":2,"chapter":"敘述統計：表格與圖形","topic":"累積次數與分配形狀","src":"W2 敘述統計：表格與圖形","lecture":true,"q":"承客服處理時間的分組（組距 5 分，共 6 組）。「10–14 分」這一組的累積相對次數是多少？","table":{"head":["處理時間（分）","0–4","5–9","10–14","15–19","20–24","25–29"],"rows":[["次數","4","9","7","4","3","3"]]},"opts":["0.667","0.233","0.2","0.8"],"ans":0,"exp":"\u003cb>累積\u003c/b>相對次數要把\u003cb>這一組和前面所有組\u003c/b>加起來：\u003cbr>累積次數 = 4 + 9 + 7 = 20\u003cbr>累積相對次數 = 20 ÷ 30 = \u003cb>0.667\u003c/b>\u003cbr>意思是：約 66.7% 的電話在 14 分鐘內處理完。\u003cbr>選項 B 是這一組自己的相對次數（0.233），沒有累積。"},{"id":"B07","ch":2,"chapter":"敘述統計：表格與圖形","topic":"數量資料的整理","src":"W2 敘述統計：表格與圖形","lecture":false,"q":"莖葉圖（stem-and-leaf display）相較於直方圖，最大的優點是什麼？","table":null,"opts":["可以用在類別資料上","保留了每一筆原始資料的數值，同時看得出分配形狀","一定比直方圖美觀","不需要排序就能畫"],"ans":1,"exp":"\u003cb>莖葉圖把原始數值直接當成圖的一部分\u003c/b>：莖是高位數、葉是低位數，所以看得出形狀之餘，還能把每一筆資料讀回來，也能直接找出中位數與全距。\u003cbr>直方圖一旦分組，原始數值就看不見了。\u003cbr>代價是莖葉圖只適合資料量不大的時候（通常 50 筆以內），而且只能用在數量資料上。"},{"id":"B08","ch":2,"chapter":"敘述統計：表格與圖形","topic":"兩個變數的整理","src":"W2 敘述統計：表格與圖形","lecture":true,"q":"某電商記錄 300 位顧客的裝置與是否完成購買，如下表。關於兩種裝置的完成率，正確的是？","table":{"head":["","完成購買","未完成","合計"],"rows":[["手機","96","144","240"],["桌機","36","24","60"],["合計","132","168","300"]]},"opts":["手機完成率 4%，桌機 6%，桌機較高","手機完成的人數比較多（96 人），所以手機完成率較高","兩者完成率都是 44%","資料不足，無法比較"],"ans":0,"exp":"比較「率」要用\u003cb>各列自己的合計當分母\u003c/b>，不能看絕對人數。\u003cbr>手機：96 ÷ 240 = \u003cb>4%\u003c/b>\u003cbr>桌機：36 ÷ 60 = \u003cb>6%\u003c/b>\u003cbr>手機完成的人數（96）雖然多於桌機（36），但那是因為手機使用者本來就多（240 vs 60）。\u003cb>人數多 ≠ 比率高\u003c/b>，這是交叉表最常見的誤讀。"},{"id":"B09","ch":2,"chapter":"敘述統計：表格與圖形","topic":"兩個變數的整理","src":"W2 敘述統計：表格與圖形","lecture":false,"q":"想觀察「每月廣告支出」與「每月銷售額」之間是否有關係，最適合用哪一種圖？","table":null,"opts":["圓餅圖","散佈圖","長條圖","莖葉圖"],"ans":1,"exp":"\u003cb>散佈圖\u003c/b>把每個觀察值畫成一個點（x 軸一個變數、y 軸另一個變數），是檢視\u003cb>兩個數量變數之間關係\u003c/b>的標準工具。\u003cbr>從散佈圖可以看出關係的方向（正／負）、強弱，以及是不是線性 —— 這正是第 3 章共變異數與相關係數的視覺化版本。\u003cbr>圓餅圖與長條圖處理的是單一類別變數；莖葉圖處理的是單一數量變數。"},{"id":"B10","ch":2,"chapter":"敘述統計：表格與圖形","topic":"類別資料的整理","src":"W2 敘述統計：表格與圖形","lecture":false,"q":"下列哪一種圖\u003cb>不適合\u003c/b>用來呈現「全班 50 位同學的主修科系分布」？","table":null,"opts":["長條圖","圓餅圖","次數分配表","直方圖"],"ans":3,"exp":"主修科系是\u003cb>類別資料（名目尺度）\u003c/b>，適合用次數分配表、長條圖、圓餅圖。\u003cbr>\u003cb>直方圖是給數量資料用的\u003c/b> —— 它的橫軸是連續的數線，科系之間既沒有順序也沒有距離，畫不出來。\u003cbr>選圖的第一步永遠是先問：\u003cb>這個變數是類別資料還是數量資料？\u003c/b>"},{"id":"C01","ch":3,"chapter":"敘述統計：數值量數","topic":"位置量數","src":"W3 P.13 本章的主角：畢業生起薪","lecture":true,"q":"某系 12 位應屆畢業生的月起薪（元）如下：\u003cbr>32,500　33,800　34,200　32,900　31,500　36,400　33,100　35,200　34,800　32,900　42,000　33,200\u003cbr>平均起薪是多少？","table":null,"opts":["34,375","33,500","32,900","33,200"],"ans":0,"exp":"x̄ = Σx ÷ n = 412,500 ÷ 12 = \u003cb>34,375\u003c/b> 元\u003cbr>計算機操作：先把 12 個數字全部相加得 412,500，再除以 12。\u003cb>建議把 Σx 寫在紙上\u003c/b>，等一下算變異數還會用到。\u003cbr>選項 B 是中位數（33,500），選項 C 是眾數（32,900）。"},{"id":"C02","ch":3,"chapter":"敘述統計：數值量數","topic":"位置量數","src":"W3 P.18 中位數與眾數","lecture":true,"q":"承上題（12 位畢業生起薪），中位數是多少？","table":null,"opts":["33,500","34,375","33,200","33,800"],"ans":0,"exp":"先排序：31,500　32,500　32,900　32,900　33,100　33,200　33,800　34,200　34,800　35,200　36,400　42,000\u003cbr>n = 12 為\u003cb>偶數\u003c/b>，取中間兩個（位置 6、7）的平均：\u003cbr>（33,200 + 33,800）÷ 2 = \u003cb>33,500\u003c/b> 元\u003cbr>選項 C、D 分別是位置 6 與位置 7 的單一數值 —— n 為偶數時不能只取其中一個。"},{"id":"C03","ch":3,"chapter":"敘述統計：數值量數","topic":"位置量數","src":"W3 P.18 中位數與眾數","lecture":true,"q":"承上題。這組資料的平均數 34,375 元大於中位數 33,500 元，最可能的原因是什麼？","table":null,"opts":["資料筆數太少","有一筆明顯偏高的極端值（42,000 元）把平均數往上拉","計算錯誤，平均數應該要等於中位數","因為有眾數存在"],"ans":1,"exp":"平均數\u003cb>每一筆資料都參與計算\u003c/b>，所以只要有一個極端值就會被拉走；中位數只看排序後的位置，\u003cb>對極端值免疫\u003c/b>。\u003cbr>把 42,000 拿掉之後，其餘 11 筆的平均變成 33,681.82 元，中位數則只從 33,500 變成 33,200 元 —— 平均數動得多很多。\u003cbr>\u003cb>平均數 > 中位數 → 右偏\u003c/b>。薪資、房價、交易金額都有這個特性，這也是政府公布所得時用中位數的理由。"},{"id":"C04","ch":3,"chapter":"敘述統計：數值量數","topic":"位置量數","src":"W3 P.18 中位數與眾數","lecture":false,"q":"下列哪一種情況\u003cb>最適合\u003c/b>用眾數而不是平均數或中位數？","table":null,"opts":["想知道全班平均身高","想知道服飾店賣最多的是哪一個尺寸","想知道薪資分配的中央位置","想知道資料的離散程度"],"ans":1,"exp":"\u003cb>眾數是唯一能用在類別資料上的位置量數。\u003c/b>尺寸（S／M／L）沒有平均數可言 —— 你不會進一批「平均尺寸」的衣服。\u003cbr>問「賣最好的是哪一個」「最多人選哪個方案」「哪個時段來客最多」，答案一定是眾數。\u003cbr>選項 C 的薪資明顯偏斜，該用中位數；選項 D 問的是離散程度，要用標準差。"},{"id":"C05","ch":3,"chapter":"敘述統計：數值量數","topic":"位置量數","src":"W3 P.16 加權平均數","lecture":true,"q":"某生本學期修五門課，成績與學分數如下表。學期加權平均成績是多少？（四捨五入至小數點後 1 位）","table":{"head":["課程","統計學","資料庫","體育","通識","程式設計"],"rows":[["成績","68","88","95","82","76"],["學分","3","3","1","2","3"]]},"opts":["79.6","81.8","409","80.6"],"ans":0,"exp":"加權平均 x̄w = Σ(w × x) ÷ Σw\u003cbr>Σ(w × x) = 3×68 + 3×88 + 1×95 + 2×82 + 3×76 = 955\u003cbr>Σw = 3 + 3 + 1 + 2 + 3 = 12\u003cbr>x̄w = 955 ÷ 12 = \u003cb>79.58 ≈ 79.6\u003c/b> 分\u003cbr>選項 B 是\u003cb>直接平均\u003c/b>（81.8 分），沒有考慮學分數 —— 體育只有 1 學分卻考 95 分，直接平均會把它算得和 3 學分的課一樣重。"},{"id":"C06","ch":3,"chapter":"敘述統計：數值量數","topic":"百分位數與四分位數","src":"W3 P.21 百分位數：Lp 公式與內插","lecture":true,"q":"某 API 的 12 次回應時間（ms），已由小到大排序：\u003cbr>120　145　160　185　210　240　275　320　390　460　520　880\u003cbr>第 25 百分位數的\u003cb>位置\u003c/b> L₂₅ 是多少？","table":null,"opts":["3.25","166","3","12"],"ans":0,"exp":"課本第 15 版公式：\u003cb>Lp =（p / 100）×（n + 1）\u003c/b>\u003cbr>L₂₅ =（25 / 100）×（12 + 1）= 0.25 × 13 = \u003cb>3.25\u003c/b>\u003cbr>\u003cb>注意是（n + 1），不是 n。\u003c/b>選項 C 就是誤用 n 算出來的 3。\u003cbr>還要提醒自己：Lp 算出來的是\u003cb>位置\u003c/b>，不是數值。選項 B 是 Q₁ 的值，還要再內插一步。"},{"id":"C07","ch":3,"chapter":"敘述統計：數值量數","topic":"百分位數與四分位數","src":"W3 P.21 百分位數：Lp 公式與內插","lecture":true,"q":"承上題（12 筆回應時間），Q₁ 的\u003cb>數值\u003c/b>是多少？","table":null,"opts":["166.25","160","185","3.25"],"ans":0,"exp":"L₂₅ = 3.25，落在位置 3（160）與位置 4（185）之間，距離位置 3 有 0.25。\u003cbr>內插：160 + 0.25 ×（185 − 160）= 160 + 6.25 = \u003cb>166.25\u003c/b> ms\u003cbr>最常見的錯誤是把 L₂₅ = 3.25 直接當成答案（選項 D），或是四捨五入成位置 3 直接取 160（選項 B）。\u003cb>位置 ≠ 數值。\u003c/b>"},{"id":"C08","ch":3,"chapter":"敘述統計：數值量數","topic":"百分位數與四分位數","src":"W3 P.22 四分位數","lecture":true,"q":"承上題。下列敘述何者正確？","table":null,"opts":["Q₂ = 258，與中位數相同","Q₂ = 442，與中位數不同","Q₂ 必須另外用不同公式計算，不等於中位數","IQR = Q₃ + Q₁ = 608.8"],"ans":0,"exp":"\u003cb>Q₂ 就是第 50 百分位數，也就是中位數。\u003c/b>L₅₀ = 0.5 × 13 = 6.5，落在位置 6（240）與 7（275）之間，內插得 \u003cb>257.5\u003c/b>。\u003cbr>用中位數定義驗證：n = 12 為偶數，取中間兩個的平均 （240 + 275）÷ 2 = 257.5 ✓ 兩者一致。\u003cbr>這是考試時很好用的\u003cb>檢查點\u003c/b>：若你算出的 Q₂ 和中位數不一樣，一定有一個算錯了。\u003cbr>另外 IQR = Q₃ \u003cb>−\u003c/b> Q₁ = 442.5 − 166.25 = 276.25，是相減不是相加。"},{"id":"C09","ch":3,"chapter":"敘述統計：數值量數","topic":"百分位數與四分位數","src":"W3 P.21 百分位數：Lp 公式與內插","lecture":true,"q":"承上題。若 SLA 要求「第 90 百分位的回應時間須低於 600 ms」，這組資料達標嗎？","table":null,"opts":["達標，P₉₀ = 772 ms \u003c 600 ms","未達標，P₉₀ = 772 ms > 600 ms","達標，因為中位數 258 ms 遠低於 600 ms","未達標，因為最大值 880 ms 超過 600 ms"],"ans":1,"exp":"L₉₀ = 0.9 × 13 = 11.7，落在位置 11（520）與 12（880）之間。\u003cbr>內插：520 + 0.7 × （880 − 520）= \u003cb>772\u003c/b> ms\u003cbr>772 > 600 → \u003cb>未達標\u003c/b>。\u003cbr>選項 C 的錯誤很典型：\u003cb>SLA 寫的是 P₉₀ 就要算 P₉₀\u003c/b>，中位數再漂亮也不能拿來交差 —— 平均值與中位數會掩蓋尾端。"},{"id":"C10","ch":3,"chapter":"敘述統計：數值量數","topic":"離散量數","src":"W3 離散量數：變異數與標準差","lecture":true,"q":"計算\u003cb>樣本\u003c/b>變異數時，分母為什麼是 n − 1 而不是 n？","table":null,"opts":["為了讓答案比較大","為了讓 s² 成為母體變異數 σ² 的不偏估計量","因為課本規定，沒有特別理由","為了方便開根號"],"ans":1,"exp":"樣本資料是圍繞在 x̄ 附近的，而 x̄ 本身又是由這些資料算出來的，所以\u003cb>樣本看起來會比母體「擠」一點\u003c/b>。\u003cbr>除以 n 會\u003cb>系統性低估\u003c/b>母體變異數；除以 n − 1 剛好補回這個縮水，課本稱為\u003cb>不偏估計量\u003c/b>。\u003cbr>n − 1 也叫\u003cb>自由度\u003c/b>：n 個離差當中只有 n − 1 個是自由的，因為 Σ(x − x̄) 必定等於 0，最後一個離差被前面決定了。"},{"id":"C11","ch":3,"chapter":"敘述統計：數值量數","topic":"離散量數","src":"W3 離散量數：變異數與標準差","lecture":true,"q":"甲產線 8 天的日產量為 48、52、50、49、51、50、52、48。樣本標準差約是多少？","table":null,"opts":["1.6","2.57","1.5","4"],"ans":0,"exp":"x̄ = 400 ÷ 8 = 50\u003cbr>Σ(x − x̄)² = 18\u003cbr>s² = 18 ÷ (8 − 1) = \u003cb>2.5714\u003c/b>\u003cbr>s = √2.5714 = \u003cb>1.6036\u003c/b> ≈ 1.6\u003cbr>選項 B 是變異數（單位是「件²」，無法解讀）；選項 C 是誤用分母 n 的結果；選項 D 是全距。"},{"id":"C12","ch":3,"chapter":"敘述統計：數值量數","topic":"離散量數","src":"W3 離散量數：變異數與標準差","lecture":true,"q":"甲、乙兩條產線的日產量：甲 x̄ = 50、s = 1.6；乙 x̄ = 50、s = 15.05。哪一條產線比較穩定？","table":null,"opts":["甲較穩定，變異係數 3.2% 遠小於乙的 30.1%","乙較穩定，因為乙的平均產量較高","兩條一樣穩定，因為平均數相同","無法比較，因為單位不同"],"ans":0,"exp":"兩條產線的平均數相同（都是 50 件），所以直接比標準差就看得出來：甲 1.6 遠小於乙 15.05。\u003cbr>若平均數不同，就要改比\u003cb>變異係數 CV = (s ÷ x̄) × 100%\u003c/b>：\u003cbr>甲 CV = 1.6 ÷ 50 × 100% = \u003cb>3.2%\u003c/b>\u003cbr>乙 CV = 15.05 ÷ 50 × 100% = \u003cb>30.1%\u003c/b>\u003cbr>CV 是\u003cb>無單位\u003c/b>的相對離散程度，才能跨不同單位或不同量級比較。"},{"id":"C13","ch":3,"chapter":"敘述統計：數值量數","topic":"離散量數","src":"W3 離散量數：變異數與標準差","lecture":false,"q":"下列關於變異數與標準差的敘述，何者\u003cb>錯誤\u003c/b>？","table":null,"opts":["變異數的單位是原始資料單位的平方","標準差與原始資料同單位，所以比較好解讀","變異數有可能是負數","所有資料都相同時，變異數等於 0"],"ans":2,"exp":"\u003cb>變異數不可能是負數\u003c/b>。它是離差\u003cb>平方\u003c/b>的平均，每一項都 ≥ 0，加起來自然 ≥ 0。若你算出負數，一定是捷徑公式 Σx² − n·x̄² 算錯了。\u003cbr>其餘三項都正確：變異數的單位是平方（例如「元²」，無法解讀），所以實務報告幾乎都報標準差；而所有資料都一樣時每個離差都是 0，變異數剛好等於 0。"},{"id":"C14","ch":3,"chapter":"敘述統計：數值量數","topic":"z 分數與相對位置","src":"W3 z 分數與相對位置","lecture":true,"q":"某次考試平均 72 分、標準差 8 分。小明考 88 分，他的 z 分數是多少？","table":null,"opts":["2.0","1.6","16","0.5"],"ans":0,"exp":"z =（x − x̄）÷ s =（88 − 72）÷ 8 = 16 ÷ 8 = \u003cb>2.0\u003c/b>\u003cbr>意思是小明的成績在平均數\u003cb>之上 2 個標準差\u003c/b>。\u003cbr>z 分數的用途是把不同單位、不同量級的資料換算到同一把尺上 —— 數學 88 分和英文 75 分哪個表現比較好，比 z 分數就知道。\u003cbr>選項 C 是忘了除以標準差，只算了離差 16。"},{"id":"C15","ch":3,"chapter":"敘述統計：數值量數","topic":"z 分數與相對位置","src":"W3 z 分數與相對位置","lecture":false,"q":"柴比雪夫定理指出：至少有 (1 − 1/z²) 的資料落在平均數 ± z 個標準差之內。依此，至少有多少比例的資料落在 ± 2 個標準差之內？","table":null,"opts":["68%","75%","95%","89%"],"ans":1,"exp":"代入 z = 2：1 − 1 / 2² = 1 − 1/4 = \u003cb>0.75 = 75%\u003c/b>\u003cbr>\u003cb>柴比雪夫定理對任何形狀的分配都成立\u003c/b>，不需要假設常態，代價是界限比較寬鬆。\u003cbr>選項 A、C 是\u003cb>經驗法則\u003c/b>的數字（± 1σ 約 68%、± 2σ 約 95%、± 3σ 約 99.7%），但經驗法則\u003cb>只在資料近似鐘形（常態）時才能用\u003c/b>。\u003cbr>考試時先看題目有沒有說「鐘形」或「常態」：有 → 經驗法則；沒有 → 柴比雪夫。"},{"id":"C16","ch":3,"chapter":"敘述統計：數值量數","topic":"z 分數與相對位置","src":"W3 z 分數與相對位置","lecture":true,"q":"一般把 z 分數的絕對值超過多少，當成判斷離群值的經驗門檻？","table":null,"opts":["|z| > 1","|z| > 2","|z| > 3","|z| > 5"],"ans":2,"exp":"課本採用的經驗門檻是 \u003cb>|z| > 3\u003c/b>。若資料近似常態，落在 ± 3 個標準差之外的機率不到 0.3%，出現這種值通常值得懷疑。\u003cbr>另一套常用的判準是\u003cb>箱形圖的 1.5 × IQR 界限\u003c/b>，它不受極端值影響（因為用的是四分位數），在偏斜資料上比 z 分數可靠。\u003cbr>\u003cb>注意：判定為離群值不等於可以刪除。\u003c/b>先確認是不是登錄錯誤，確定是真實資料就要保留並說明。"},{"id":"C17","ch":3,"chapter":"敘述統計：數值量數","topic":"五數彙總與箱形圖","src":"W3 五數彙總與箱形圖","lecture":true,"q":"某批訂單的處理天數（已排序）：12　15　18　19　21　22　24　25　27　30　33　58\u003cbr>（n = 12，已知 Q₁ = 18.25、Q₃ = 29.25）箱形圖的上界限（upper fence）是多少？","table":null,"opts":["45.75","40.25","58","43.88"],"ans":0,"exp":"IQR = Q₃ − Q₁ = 29.25 − 18.25 = 11\u003cbr>上界限 = Q₃ + \u003cb>1.5 ×\u003c/b> IQR = 29.25 + 1.5 × 11 = \u003cb>45.75\u003c/b>\u003cbr>下界限 = Q₁ − 1.5 × IQR = 1.75\u003cbr>超出界限的資料就是離群值，本例是 \u003cb>58\u003c/b>。\u003cbr>選項 D 是把 Q₃ 乘以 1.5，不是加上 1.5 倍的 IQR。"},{"id":"C18","ch":3,"chapter":"敘述統計：數值量數","topic":"五數彙總與箱形圖","src":"W3 五數彙總與箱形圖","lecture":true,"q":"承上題。箱形圖的「鬚（whisker）」應該畫到哪裡？","table":null,"opts":["畫到界限 1.8 與 45.8 的位置","畫到界限\u003cb>之內\u003c/b>的最小值與最大值，離群值另外用點標出","一律畫到最小值 12 與最大值 58","畫到 Q₁ 與 Q₃"],"ans":1,"exp":"鬚要畫到\u003cb>界限以內的實際資料點\u003c/b>，不是畫到界限本身，也不是無條件畫到最大最小值。\u003cbr>本例上界限 = 45.75，界限內最大的實際資料是 \u003cb>33\u003c/b>，鬚就畫到這裡；58 超出界限，另外用小圓點標示為離群值。\u003cbr>箱子的兩端才是 Q₁ 與 Q₃，中間那條線是中位數。"},{"id":"C19","ch":3,"chapter":"敘述統計：數值量數","topic":"相關性量數","src":"W3 相關性量數","lecture":true,"q":"關於共變異數與相關係數，下列敘述何者正確？","table":null,"opts":["共變異數的大小可以直接判斷關係強弱","相關係數沒有單位、介於 −1 與 +1 之間，才適合比較關係強弱","相關係數的範圍是 0 到 1","共變異數為 0 代表兩變數完全獨立"],"ans":1,"exp":"\u003cb>共變異數受單位影響\u003c/b>：同一組資料改用「元」或「萬元」，共變異數會差好幾個數量級，所以它只能看\u003cb>方向\u003c/b>（正、負），不能比大小。\u003cbr>\u003cb>相關係數 r = s(xy) ÷ (s(x) × s(y))\u003c/b>，把單位除掉了，固定落在 \u003cb>−1 到 +1\u003c/b>，才能跨資料集比較強弱。\u003cbr>選項 D 也錯：r = 0 只代表\u003cb>沒有線性關係\u003c/b>。講義提過的環境控制花費對室外溫度呈 U 形，r 幾乎為 0，但兩者關係其實非常強。"},{"id":"C20","ch":3,"chapter":"敘述統計：數值量數","topic":"相關性量數","src":"W3 相關性量數","lecture":true,"q":"某店 8 個月的廣告費與業績（萬元）算出 r = 0.9979。下列解讀何者最適當？","table":null,"opts":["廣告費與業績有很強的正線性關係，但不能斷定廣告「造成」業績成長","廣告費每增加 1 萬元，業績就一定增加 1 萬元","r 接近 1，證明增加廣告一定能提升業績","r 這麼高一定是算錯了"],"ans":0,"exp":"r = 0.9979 非常接近 +1，表示兩者有\u003cb>很強的正線性關係\u003c/b>。\u003cbr>但\u003cb>相關不等於因果\u003c/b> —— 也可能是旺季同時推高了廣告預算與業績（共同原因），或是業績好才敢加碼廣告（反向因果）。要談因果需要實驗設計。\u003cbr>選項 B 把 r 誤當成斜率：r 衡量的是關係的\u003cb>強弱與方向\u003c/b>，不是「增加多少」，那是迴歸係數的工作。"},{"id":"D01","ch":4,"chapter":"機率基礎概念","topic":"計數法則與機率指派","src":"W4 計數法則","lecture":true,"q":"某餐廳的套餐要從 4 種主餐、3 種飲料、5 種甜點中各選一樣。共有多少種不同的組合？","table":null,"opts":["60","12","220","15"],"ans":0,"exp":"這是\u003cb>多步驟實驗的計數法則\u003c/b>：各步驟的方法數相乘。\u003cbr>4 × 3 × 5 = \u003cb>60\u003c/b> 種。\u003cbr>選項 B 是把三個數字相加（那是「三選一」的情形，不是「各選一樣」）。\u003cbr>判斷訣竅：\u003cb>每個步驟都要做 → 相乘；只能擇一 → 相加。\u003c/b>"},{"id":"D02","ch":4,"chapter":"機率基礎概念","topic":"計數法則與機率指派","src":"W4 計數法則","lecture":true,"q":"某專題小組有 9 人，要從中選出 3 人代表上台報告（不分職務）。共有幾種選法？","table":null,"opts":["84","504","729","27"],"ans":0,"exp":"「不分職務」代表\u003cb>順序不重要\u003c/b>，用\u003cb>組合\u003c/b>：\u003cbr>C(9, 3) = 9! ÷ (3! × 6!) = \u003cb>84\u003c/b> 種。\u003cbr>選項 B 是\u003cb>排列\u003c/b> P(9,3) = 504，那是「選出組長、副組長、記錄」這種\u003cb>分職務\u003c/b>的情形，剛好是組合數的 3! = 6 倍。\u003cbr>\u003cb>看到「順序重要嗎」就能決定用排列還是組合。\u003c/b>"},{"id":"D03","ch":4,"chapter":"機率基礎概念","topic":"計數法則與機率指派","src":"W4 機率指派","lecture":false,"q":"某公司根據過去三年的紀錄，算出「新客戶在首月下單」的比例是 0.37，並以此作為下一位新客戶首月下單的機率。這屬於哪一種機率指派法？","table":null,"opts":["古典法","相對次數法","主觀法","貝氏法"],"ans":1,"exp":"\u003cb>相對次數法\u003c/b>：用大量重複觀察的歷史比例當作機率，適合有累積資料的情境。\u003cbr>\u003cb>古典法\u003c/b>要求所有結果\u003cb>等可能\u003c/b>（擲骰子、抽籤），這裡顯然不是。\u003cbr>\u003cb>主觀法\u003c/b>是在沒有資料也無法假設等可能時，依專業判斷給出機率（例如評估一個全新產品上市成功的機率）。\u003cbr>三種方法指派出來的數值，都必須滿足：每個機率介於 0 與 1 之間、所有樣本點機率合計為 1。"},{"id":"D04","ch":4,"chapter":"機率基礎概念","topic":"計數法則與機率指派","src":"W4 機率指派","lecture":false,"q":"下列哪一組數字\u003cb>不能\u003c/b>作為某實驗三個樣本點的機率指派？","table":null,"opts":["0.2、0.3、0.5","0.1、0.1、0.8","0.4、0.4、0.3","0、0.5、0.5"],"ans":2,"exp":"機率指派的兩個基本要求：\u003cb>① 每個機率介於 0 與 1 之間　② 全部加起來等於 1\u003c/b>。\u003cbr>0.4 + 0.4 + 0.3 = \u003cb>1.1 ≠ 1\u003c/b>，違反第二項。\u003cbr>選項 D 的 0 是合法的 —— 機率可以等於 0，代表該結果不會發生，這和「小於 0」完全不同。"},{"id":"D05","ch":4,"chapter":"機率基礎概念","topic":"加法律與互斥","src":"W4 加法律與互斥","lecture":true,"q":"某系 400 位學生中，修過程式設計的有 280 人，通過證照考試的有 204 人，兩者皆是的有 168 人。隨機抽一位，「修過程式設計\u003cb>或\u003c/b>通過證照」的機率是多少？","table":null,"opts":["0.79","1.21","0.42","0.21"],"ans":0,"exp":"加法律：\u003cb>P(A ∪ B) = P(A) + P(B) − P(A ∩ B)\u003c/b>\u003cbr>P(A) = 280/400 = 0.7，P(B) = 204/400 = 0.51，P(A ∩ B) = 168/400 = 0.42\u003cbr>P(A ∪ B) = 0.7 + 0.51 − 0.42 = \u003cb>0.79\u003c/b>\u003cbr>選項 B（1.21）是忘了減交集，那 168 位兩者皆是的學生會被\u003cb>算兩次\u003c/b>。"},{"id":"D06","ch":4,"chapter":"機率基礎概念","topic":"加法律與互斥","src":"W4 加法律與互斥","lecture":true,"q":"某系統每小時的狀態只會是「正常」「延遲」「中斷」三者之一，機率分別為 0.88、0.09、0.03。「不是正常」的機率是多少？","table":null,"opts":["0.12","0.09","0.03","0.88"],"ans":0,"exp":"三種狀態\u003cb>互斥且完整\u003c/b>（只會是其中一種，而且必定是其中一種），所以：\u003cbr>P(不是正常) = P(延遲) + P(中斷) = 0.09 + 0.03 = \u003cb>0.12\u003c/b>\u003cbr>更快的算法是\u003cb>餘集\u003c/b>：1 − 0.88 = 0.12。\u003cbr>看到「不是」「至少」「以上」，先想餘集通常最快。"},{"id":"D07","ch":4,"chapter":"機率基礎概念","topic":"加法律與互斥","src":"W4 加法律與互斥","lecture":true,"q":"「互斥」與「獨立」有什麼不同？","table":null,"opts":["是同一件事的兩種說法","互斥是兩事件不能同時發生；獨立是一方發生不影響另一方的機率","互斥只用在三個以上事件，獨立只用在兩個事件","互斥事件一定獨立"],"ans":1,"exp":"\u003cb>互斥\u003c/b>講的是「能不能同時發生」：P(A ∩ B) = 0。\u003cbr>\u003cb>獨立\u003c/b>講的是「會不會互相影響」：P(A ∩ B) = P(A) × P(B)，或 P(B | A) = P(B)。\u003cbr>兩者不但不同，而且\u003cb>機率都不為 0 的互斥事件一定不獨立\u003c/b> —— 因為 A 發生了，B 就完全不可能發生（P(B | A) = 0 ≠ P(B)），這是最強的影響。\u003cbr>這一題幾乎每年都考，務必分清楚。"},{"id":"D08","ch":4,"chapter":"機率基礎概念","topic":"加法律與互斥","src":"W4 加法律與互斥","lecture":false,"q":"若 A 與 B 互斥，則下列哪一個式子成立？","table":null,"opts":["P(A ∪ B) = P(A) + P(B)","P(A ∩ B) = P(A) × P(B)","P(A | B) = P(A)","P(A) + P(B) = 1"],"ans":0,"exp":"互斥代表 P(A ∩ B) = 0，加法律 P(A ∪ B) = P(A) + P(B) − P(A ∩ B) 就簡化成 \u003cb>P(A ∪ B) = P(A) + P(B)\u003c/b>。\u003cbr>選項 B、C 是\u003cb>獨立\u003c/b>的條件，不是互斥。\u003cbr>選項 D 要加上「互斥\u003cb>且\u003c/b>完整（窮盡所有可能）」才成立 —— 互斥只保證不重疊，不保證蓋滿整個樣本空間。"},{"id":"D09","ch":4,"chapter":"機率基礎概念","topic":"條件機率","src":"W4 條件機率","lecture":true,"q":"承交叉表。在\u003cb>修過程式設計\u003c/b>的學生當中，通過證照考試的機率 P(通過 | 修過) 是多少？","table":{"head":["人數","通過證照","未通過","合計"],"rows":[["修過程式設計","168","112","280"],["沒修過","36","84","120"],["合計","204","196","400"]]},"opts":["0.6","0.42","0.51","0.8235"],"ans":0,"exp":"條件機率 \u003cb>P(B | A) = P(A ∩ B) ÷ P(A)\u003c/b>，關鍵是\u003cb>分母換成條件那一群\u003c/b>。\u003cbr>P(通過 | 修過) = 168 ÷ 280 = \u003cb>0.6\u003c/b>\u003cbr>（用機率算也一樣：0.42 ÷ 0.7 = 0.6）\u003cbr>選項 B 是\u003cb>聯合機率\u003c/b> P(A ∩ B)，分母還是全部 400 人；選項 D 是\u003cb>反過來\u003c/b>的 P(修過 | 通過) = 168 ÷ 204 = 0.8235。\u003cbr>\u003cb>P(B|A) 與 P(A|B) 是兩回事\u003c/b>，寫錯方向是本章最常見的失分。"},{"id":"D10","ch":4,"chapter":"機率基礎概念","topic":"條件機率","src":"W4 條件機率","lecture":true,"q":"承上題。沒修過程式設計的學生通過率 P(通過 | 沒修過) = 0.3，修過的則是 0.6。下列解讀何者最適當？","table":null,"opts":["修過的通過率是沒修過的 2 倍，但不能據此斷定修課「造成」通過","修過程式設計一定會通過證照","兩者差異不大，可以視為相同","沒修過的人不可能通過"],"ans":0,"exp":"0.6 ÷ 0.3 = 2 倍，差距確實很大。\u003cbr>但這是\u003cb>觀察資料\u003c/b>，不是實驗 —— 很可能是本來就對程式有興趣、比較用功的學生同時選擇了修課也去考證照（\u003cb>自我選擇偏誤\u003c/b>）。\u003cbr>要證明因果，必須隨機指派誰修課誰不修。\u003cb>條件機率的差異只是線索，不是證據。\u003c/b>"},{"id":"D11","ch":4,"chapter":"機率基礎概念","topic":"條件機率","src":"W4 條件機率","lecture":false,"q":"已知 P(A) = 0.6、P(A ∩ B) = 0.18，則 P(B | A) 是多少？","table":null,"opts":["0.30","0.18","0.60","0.78"],"ans":0,"exp":"P(B | A) = P(A ∩ B) ÷ P(A) = 0.18 ÷ 0.6 = \u003cb>0.30\u003c/b>\u003cbr>\u003cb>分母是條件（直線後面）那一個事件的機率\u003c/b>。\u003cbr>順帶檢查：因為 P(B|A) = 0.30 ≠ P(B) 時兩者不獨立；若恰好 P(B) 也等於 0.30，那 A 與 B 就是獨立的。"},{"id":"D12","ch":4,"chapter":"機率基礎概念","topic":"條件機率","src":"W4 條件機率","lecture":false,"q":"下列哪一個情境描述的是\u003cb>條件機率\u003c/b>？","table":null,"opts":["隨機抽一位學生，他是男生的機率","隨機抽一位學生，他既是男生又通過證照的機率","在已經通過證照的學生中，隨機抽一位是男生的機率","全系通過證照的人數比例"],"ans":2,"exp":"條件機率的語言特徵是「\u003cb>在…之中\u003c/b>」「\u003cb>已知…的情況下\u003c/b>」「\u003cb>給定…\u003c/b>」—— 它把\u003cb>樣本空間縮小\u003c/b>到條件那一群。\u003cbr>選項 C 的分母只有「通過證照的學生」，不是全系，所以是 P(男生 | 通過)。\u003cbr>選項 B 是\u003cb>聯合機率\u003c/b>（分母仍是全系），選項 A、D 是\u003cb>邊際機率\u003c/b>。\u003cbr>考試作答前先問：\u003cb>分母是誰？\u003c/b>答案就出來了。"},{"id":"D13","ch":4,"chapter":"機率基礎概念","topic":"獨立與乘法律","src":"W4 獨立與乘法律","lecture":true,"q":"承交叉表。「修過程式設計」與「通過證照」這兩個事件獨立嗎？","table":null,"opts":["不獨立，因為 P(A ∩ B) = 0.42 ≠ P(A) × P(B) = 0.357","獨立，因為 P(A ∩ B) = 0.42 不等於 0","獨立，因為兩個事件可以同時發生","無法判斷，資料不足"],"ans":0,"exp":"獨立的檢定式：\u003cb>P(A ∩ B) = P(A) × P(B)\u003c/b>（或等價地 P(B | A) = P(B)）。\u003cbr>P(A) × P(B) = 0.7 × 0.51 = 0.357\u003cbr>但實際的 P(A ∩ B) = 0.42 ≠ 0.357 → \u003cb>不獨立\u003c/b>。\u003cbr>換個角度看也一樣：P(通過 | 修過) = 0.6，而 P(通過) = 0.51，兩者不等 —— 知道「修過」確實改變了通過的機率。"},{"id":"D14","ch":4,"chapter":"機率基礎概念","topic":"獨立與乘法律","src":"W4 獨立與乘法律","lecture":true,"q":"某系統有兩台獨立運作的伺服器，各自當機的機率都是 0.05。「兩台同時當機」的機率是多少？","table":null,"opts":["0.0025","0.10","0.05","0.95"],"ans":0,"exp":"獨立事件的\u003cb>乘法律\u003c/b>：P(A ∩ B) = P(A) × P(B) = 0.05 × 0.05 = \u003cb>0.0025\u003c/b>\u003cbr>這正是\u003cb>備援設計\u003c/b>的數學基礎：單機失效率 5% 已經不可接受，但兩台獨立備援後同時掛掉的機率降到 0.25%。\u003cbr>\u003cb>前提是「獨立」。\u003c/b>若兩台插在同一個電源、同一個機櫃，停電時會一起掛，獨立假設就不成立，實際風險遠高於 0.0025。"},{"id":"D15","ch":4,"chapter":"機率基礎概念","topic":"獨立與乘法律","src":"W4 獨立與乘法律","lecture":false,"q":"若 A 與 B 獨立，且 P(A) = 0.4、P(B) = 0.5，則 P(A ∪ B) 是多少？","table":null,"opts":["0.70","0.90","0.20","0.45"],"ans":0,"exp":"先用獨立求交集：P(A ∩ B) = 0.4 × 0.5 = 0.20\u003cbr>再用加法律：P(A ∪ B) = P(A) + P(B) − P(A ∩ B) = 0.4 + 0.5 − 0.20 = \u003cb>0.70\u003c/b>\u003cbr>選項 B 是忘了減交集。\u003cb>獨立不代表互斥\u003c/b> —— 這裡兩事件可以同時發生（機率 0.2），所以交集一定要減掉。"},{"id":"D16","ch":4,"chapter":"機率基礎概念","topic":"貝氏定理","src":"W4 貝氏定理","lecture":true,"q":"某監控系統：所有連線中有 3% 真的異常。系統把異常連線標記出來的機率是 0.92，把正常連線誤標的機率是 0.05。現有一筆連線被標記，它真的異常的機率約是多少？","table":null,"opts":["0.3627","0.92","0.03","0.0761"],"ans":0,"exp":"用表格求解法：\u003cbr>P(F ∩ A) = 0.03 × 0.92 = 0.0276\u003cbr>P(Fᶜ ∩ A) = 0.97 × 0.05 = 0.0485\u003cbr>P(A) = 0.0276 + 0.0485 = 0.0761\u003cbr>P(F | A) = 0.0276 ÷ 0.0761 = \u003cb>0.3627\u003c/b>\u003cbr>選項 B 把 P(A | F) = 0.92 誤當成 P(F | A)，這是\u003cb>把條件寫反\u003c/b>，也是貝氏定理最經典的錯誤。"},{"id":"D17","ch":4,"chapter":"機率基礎概念","topic":"貝氏定理","src":"W4 貝氏定理","lecture":true,"q":"承上題。偵測率高達 0.92，為什麼被標記的連線真的異常的機率只有約 36%？","table":null,"opts":["因為偵測率算錯了","因為正常連線的基數太大（97%），即使誤標率只有 0.05，產生的誤報量仍超過真陽性","因為先驗機率不重要","因為樣本數太少"],"ans":1,"exp":"關鍵在\u003cb>基本比率（base rate）\u003c/b>。\u003cbr>真陽性：0.03 × 0.92 = 0.0276\u003cbr>偽陽性：0.97 × 0.05 = 0.0485 ← \u003cb>反而比較大\u003c/b>\u003cbr>正常連線佔了 97%，就算只誤標 5%，絕對數量仍然壓過真正的異常。\u003cbr>這就是為什麼資安與醫療篩檢都要在意\u003cb>誤報率\u003c/b>而不只是偵測率 —— 每 10 筆警報裡約有 6 筆是白忙一場。"},{"id":"D18","ch":4,"chapter":"機率基礎概念","topic":"貝氏定理","src":"W4 貝氏定理","lecture":false,"q":"使用貝氏定理時，下列敘述何者正確？","table":null,"opts":["先驗機率 P(F) 不影響後驗機率 P(F | A)","後驗機率一定大於先驗機率","先驗機率越小，同樣的證據算出的後驗機率也越小","貝氏定理只能用在兩個事件的情形"],"ans":2,"exp":"\u003cb>先驗機率直接決定了後驗機率的起點。\u003c/b>同樣的偵測器，用在「異常率 3%」的環境與「異常率 30%」的環境，算出的 P(F | A) 會差很多倍。\u003cbr>選項 B 也錯：若證據反而不利於 F（例如 P(A | F) \u003c P(A | Fᶜ)），後驗機率會\u003cb>低於\u003c/b>先驗機率。\u003cbr>選項 D 錯：貝氏定理可以推廣到任意多個\u003cb>互斥且完整\u003c/b>的事件 A₁, A₂, …, Aₙ，分母就是把所有聯合機率加起來。"},{"id":"M01","ch":5,"chapter":"離散機率分配","topic":"隨機變數與機率分配","src":"P.9 離散型與連續型隨機變數","lecture":true,"q":"下列哪一個隨機變數是「連續型」隨機變數？","table":null,"opts":["某超商一天賣出的咖啡杯數","一個班級中通過證照考試的人數","使用者從點擊到頁面載入完成所花的秒數","一週內伺服器當機的次數"],"ans":2,"exp":"連續型隨機變數可以取某一區間內的任何值（含小數），通常來自「測量」；離散型是用「數」的，結果是 0、1、2…。載入時間可以是 1.238 秒，屬於連續型；其餘三個都是在數個數。"},{"id":"M02","ch":5,"chapter":"離散機率分配","topic":"隨機變數與機率分配","src":"P.9 離散型與連續型隨機變數","lecture":true,"q":"某物流公司記錄每件包裹的重量（公斤）與每日送達的件數。關於這兩個變數，下列敘述何者正確？","table":null,"opts":["兩者都是離散型","重量是連續型，件數是離散型","重量是離散型，件數是連續型","兩者都是連續型"],"ans":1,"exp":"重量是量出來的，可以是 2.347 公斤，屬於連續型；件數是數出來的，只能是 0、1、2…，屬於離散型。判斷訣竅：問自己「這個數字是數來的還是量來的」。"},{"id":"M03","ch":5,"chapter":"離散機率分配","topic":"隨機變數與機率分配","src":"P.12 離散機率分配 f(x) 與兩個必要條件","lecture":true,"q":"離散機率分配 f(x) 必須同時滿足哪兩個條件？","table":null,"opts":["f(x) > 0 且 Σf(x) = 1","f(x) ≥ 0 且 Σf(x) = 1","f(x) ≥ 0 且 Σf(x) ≤ 1","0 \u003c f(x) \u003c 1 且 Σf(x) = 1"],"ans":1,"exp":"兩個條件是 f(x) ≥ 0（機率不能是負的，但\u003cb>可以等於 0\u003c/b>，表示該值不會出現）與 Σf(x) = 1（所有可能結果的機率加起來剛好是 1，不能多也不能少）。(A) 的「> 0」排除了機率為 0 的值，太嚴格。"},{"id":"M04","ch":5,"chapter":"離散機率分配","topic":"隨機變數與機率分配","src":"P.12 離散機率分配 f(x) 與兩個必要條件","lecture":true,"q":"某離散隨機變數 X 的四個可能值對應機率為 0.15、0.3、0.25、0.2。這是一個合法的機率分配嗎？","table":null,"opts":["是，每個值都介於 0 與 1 之間","不是，總和為 0.9，不等於 1","不是，機率值不可以重複","資料不足，還需要知道 X 的實際數值才能判斷"],"ans":1,"exp":"每個 f(x) 都 ≥ 0 ✓，但總和 = 0.9 ≠ 1 ✗，第二個條件不成立。檢查合法性時兩個條件都要驗，很多人只看第一個就下結論。注意 X 取什麼數值完全不影響這個判斷。"},{"id":"M05","ch":5,"chapter":"離散機率分配","topic":"隨機變數與機率分配","src":"P.14 離散型均勻機率分配","lecture":true,"q":"下列哪一個情境可以用「離散型均勻機率分配」描述？","table":null,"opts":["某手機行每日銷售量，賣 1 台的機率遠高於賣 5 台","擲一顆公正骰子出現的點數","8 筆可疑連線中真正是攻擊的筆數","每小時進入機房的人次"],"ans":1,"exp":"均勻分配要求\u003cb>每一個結果出現的機率完全相同\u003c/b>，f(x) = 1/n。公正骰子的六個點數各為 1/6 ✓。(A) 正是講義拿來當反例的 DiCarlo 情形 —— 各銷售量的機率差很多，不是均勻分配。"},{"id":"M06","ch":5,"chapter":"離散機率分配","topic":"隨機變數與機率分配","src":"P.16 練習 2 解答：機率分配與事件機率","lecture":true,"q":"某 App 單次開啟觀看影片數 X 的分配如下表。「至少觀看 2 部」與「觀看超過 2 部」的機率分別是多少？","table":{"head":["x（部）","0","1","2","3","4"],"rows":[["f(x)","0.08","0.22","0.34","0.24","0.12"]]},"opts":["都是 0.7","0.7 與 0.36","0.36 與 0.7","0.7 與 0.58"],"ans":1,"exp":"「至少 2 部」\u003cb>包含 2\u003c/b>：x = 2, 3, 4 → 0.34 + 0.24 + 0.12 = 0.7。\u003cbr>「超過 2 部」\u003cb>不含 2\u003c/b>：x = 3, 4 → 0.24 + 0.12 = 0.36。\u003cbr>一字之差，答案差了 0.34。看到不等號先確認有沒有等號。"},{"id":"M07","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.5 先猜猜看：三個問題","lecture":true,"q":"擲一顆公正骰子，點數的期望值是 3.5，但骰子根本擲不出 3.5 點。下列敘述何者正確？","table":null,"opts":["期望值算錯了，骰子擲不出的值不可能是期望值","期望值是長期平均，不必是可能出現的值","期望值一定是出現機率最高的那一個值","離散隨機變數的期望值必須是整數"],"ans":1,"exp":"期望值是「做很多很多次之後的平均」，不是對下一次的預測，也不必落在可能值上。擲很多次，平均點數會趨近 3.5。期望值是分配的\u003cb>重心\u003c/b>，重心當然可以落在沒有實物的位置上。"},{"id":"M08","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.20 DiCarlo 的期望值與變異數（表格法）","lecture":true,"q":"某手機行統計過去 300 個營業日的每日銷售量，得到下列分配。E(X) 是多少？","table":{"head":["x（台）","0","1","2","3","4","5"],"rows":[["天數","36","108","75","48","24","9"],["f(x)","0.12","0.36","0.25","0.16","0.08","0.03"]]},"opts":["1.81 台","2.31 台","2.50 台","4.83 台"],"ans":0,"exp":"E(X) = Σ x·f(x) = 0(0.12) + 1(0.36) + 2(0.25) + 3(0.16) + 4(0.08) + 5(0.03) = \u003cb>1.81\u003c/b> 台。\u003cbr>注意不是把 0～5 平均（那會得到 2.5，是選項 C 的陷阱），而是\u003cb>用機率加權\u003c/b>。期望值一定要乘上各自的機率。"},{"id":"M09","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.19 變異數 Var(X) 與標準差 σ","lecture":false,"q":"計算離散隨機變數的變異數時，下列哪一個式子是正確的「捷徑公式」？","table":null,"opts":["Var(X) = E(X²) − [E(X)]²","Var(X) = [E(X)]² − E(X²)","Var(X) = E(X²) − E(X)","Var(X) = E[(X − μ)]²"],"ans":0,"exp":"捷徑公式是 Var(X) = E(X²) − μ²。推導：E[(X−μ)²] = E(X² − 2μX + μ²) = E(X²) − 2μE(X) + μ² = E(X²) − μ²。\u003cbr>(B) 順序顛倒會算出負數；(D) 少了平方的位置 —— 定義式是 E[(X−μ)\u003cb>²\u003c/b>]，平方在期望值\u003cb>裡面\u003c/b>。"},{"id":"M10","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.21 期望值怎麼用在決策上","lecture":true,"q":"兩個投資方案的淨利分配不同，但 E(X) 都是 5 萬元，標準差分別為 σ_A ≈ 43.8 萬、σ_B ≈ 11 萬。下列敘述何者最適當？","table":null,"opts":["兩案完全等價，隨便選一個都可以","A 案比較好，因為標準差大代表報酬高","期望值相同時，σ 反映風險；保守者應選 B，能承受風險者才考慮 A","應該選 σ 較大的 A，因為變異數大代表資訊量多"],"ans":2,"exp":"期望值相同（都是 5 萬）時，光看 E(X) 無法做決定，這時 σ 才是關鍵。A 的波動（43.8 萬）約是 B（11 萬）的 4 倍。\u003cbr>\u003cb>期望值告訴你「平均會怎樣」，變異數告訴你「可能偏離多遠」，兩個都要看。\u003c/b>標準差大只代表不確定性高，不代表報酬高。"},{"id":"M11","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.18 期望值 E(X)：分配的長期平均","lecture":false,"q":"若 E(X) = 3、Var(X) = 2，令 Y = 5X + 10，則 E(Y) 是多少？","table":null,"opts":["25","15","35","20"],"ans":0,"exp":"期望值具有線性性質：E(aX + b) = a·E(X) + b。\u003cbr>E(Y) = 5(3) + 10 = 15 + 10 = \u003cb>25\u003c/b>。\u003cbr>順帶一提變異數的規則不同：Var(aX + b) = a²·Var(X) = 25(2) = 50 —— \u003cb>常數 b 不影響變異數\u003c/b>（整體平移不改變離散程度），但係數 a 要平方。"},{"id":"M12","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.19 變異數 Var(X) 與標準差 σ","lecture":false,"q":"某離散隨機變數以「萬元」為單位，算得 Var(X) = 16。關於標準差 σ，下列敘述何者正確？","table":null,"opts":["σ = 16 萬元","σ = 4 萬元，與 X 同單位","σ = 4 平方萬元","σ = 256 萬元"],"ans":1,"exp":"σ = √Var(X) = √16 = \u003cb>4 萬元\u003c/b>。\u003cbr>變異數的單位是原單位的\u003cb>平方\u003c/b>（平方萬元），沒辦法直接解讀；開根號之後的標準差回到原單位，所以實務報告幾乎都報 σ 而不是 σ²。這一點和第 3 章描述統計的標準差完全一樣。"},{"id":"M13","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.20 DiCarlo 的期望值與變異數（表格法）","lecture":true,"q":"承上題手機行的分配，已算出 μ = 1.81、E(X²) = 4.83。Var(X) 是多少？","table":null,"opts":["1.5539","4.83","3.02","1.2466"],"ans":0,"exp":"用捷徑公式：Var(X) = E(X²) − μ² = 4.83 − 1.81² = 4.83 − 3.2761 = \u003cb>1.5539\u003c/b>。\u003cbr>標準差 σ = √1.5539 = 1.2466 台。\u003cbr>(C) 是把 μ² 誤寫成 μ 的常見錯誤 —— 減掉的是\u003cb>平均數的平方\u003c/b>。"},{"id":"M14","ch":5,"chapter":"離散機率分配","topic":"二項分配","src":"P.25 二項實驗的四個條件","lecture":true,"q":"下列哪一個\u003cb>不是\u003c/b>二項實驗必須滿足的條件？","table":null,"opts":["試驗次數 n 固定","每次試驗只有成功、失敗兩種結果","每次試驗的成功機率 p 都相同","成功次數 X 必須服從均勻分配"],"ans":3,"exp":"二項實驗的四個條件：\u003cb>①\u003c/b> n 次試驗固定　\u003cb>②\u003c/b> 每次只有兩種結果　\u003cb>③\u003c/b> 每次成功機率 p 不變　\u003cb>④\u003c/b> 各次試驗互相獨立。\u003cbr>X 的分配形狀是這四個條件推導出來的\u003cb>結果\u003c/b>，不是前提；而且二項分配一般不是均勻的。"},{"id":"M15","ch":5,"chapter":"離散機率分配","topic":"二項分配","src":"P.25 二項實驗的四個條件","lecture":false,"q":"從一副 52 張的撲克牌中\u003cb>不放回\u003c/b>連抽 5 張，令 X 為抽到紅心的張數。X 服從二項分配嗎？","table":null,"opts":["是，因為只有紅心與非紅心兩種結果","不是，因為不放回使各次抽牌不獨立，且 p 會改變","是，因為 n = 5 固定","不是，因為 52 張牌的樣本數太大"],"ans":1,"exp":"不放回抽樣會\u003cb>同時破壞第三與第四個條件\u003c/b>：抽走一張紅心後，下一次抽到紅心的機率從 13/52 降為 12/51，p 變了，而且各次結果互相影響，不再獨立。\u003cbr>這種情形要改用\u003cb>超幾何分配\u003c/b>。若改成「抽完放回再抽」，就完全符合二項了。"},{"id":"M16","ch":5,"chapter":"離散機率分配","topic":"二項分配","src":"P.26 二項機率公式","lecture":true,"q":"某門市每位進店顧客成交的機率為 0.25，今天隨機觀察 4 位顧客。恰好有 1 位成交的機率，下列代入式何者正確？","table":null,"opts":["C(4,1) × 0.25¹ × 0.75^4","C(4,1) × 0.25¹ × 0.75^3","C(4,1) × 0.75¹ × 0.25^3","4 × 0.25¹ × 0.75^4"],"ans":1,"exp":"公式是 f(x) = C(n,x)·pˣ·(1−p)\u003csup>n−x\u003c/sup>。此處 n = 4、x = 1、p = 0.25，所以失敗次數的指數是 \u003cb>n − x = 4 − 1 = 3\u003c/b>，不是 4。\u003cbr>算出來 f(1) = 4 × 0.25 × 0.421875 = \u003cb>0.4219\u003c/b>。\u003cbr>把指數寫成 n 是最常見的失分點，講義在練習 4 特別提醒過。"},{"id":"M17","ch":5,"chapter":"離散機率分配","topic":"二項分配","src":"P.30 練習 4 解答：二項分配","lecture":true,"q":"資安系統標記的可疑連線中有 15% 是真正的攻擊。隨機抽 8 筆人工複核，「至少有 1 筆是真正攻擊」的機率最快的算法是？","table":null,"opts":["f(1)","f(1) + f(2) + … + f(8)","1 − f(0)","1 − f(1)"],"ans":2,"exp":"「至少 1 筆」= 1 − 「一筆都沒有」= 1 − f(0)。\u003cbr>1 − C(8,0)×0.15⁰×0.85^8 = 1 − 0.272491 = \u003cb>0.7275\u003c/b>。\u003cbr>(B) 答案正確但要算 8 次；用餘集只要算一次。(A) 把「至少 1」誤寫成「恰好 1」，是本章最常見的錯誤之一。"},{"id":"M18","ch":5,"chapter":"離散機率分配","topic":"二項分配","src":"P.28 二項分配的期望值與變異數","lecture":true,"q":"承上題（n = 8、p = 0.15），E(X) 與 Var(X) 分別是多少？","table":null,"opts":["E(X) = 1.2，Var(X) = 1.02","E(X) = 1.2，Var(X) = 1.2","E(X) = 4，Var(X) = 1.02","E(X) = 1.2，Var(X) = 1.01"],"ans":0,"exp":"E(X) = np = 8 × 0.15 = \u003cb>1.2\u003c/b> 筆\u003cbr>Var(X) = np(1−p) = 8 × 0.15 × 0.85 = \u003cb>1.02\u003c/b>\u003cbr>σ = √1.02 = 1.01 筆\u003cbr>(B) 是把卜瓦松的 E = Var 誤套到二項；(D) 把標準差當成變異數。"},{"id":"M19","ch":5,"chapter":"離散機率分配","topic":"二項分配","src":"P.28 二項分配的期望值與變異數","lecture":false,"q":"二項分配的 n 固定時，Var(X) = np(1−p) 在 p 等於多少時最大？","table":null,"opts":["p = 0","p = 0.5","p = 1","p 越大變異數越大，沒有最大值"],"ans":1,"exp":"np(1−p) 看成 p 的二次函數，開口向下，對稱軸在 \u003cb>p = 0.5\u003c/b>，此時 Var = n/4 達到最大。\u003cbr>直覺上也合理：\u003cb>五五波最難預測\u003c/b>。p = 0.99 的事情幾乎每次都成功，結果很穩定，變異數接近 0；p = 0.01 也一樣穩定（幾乎都失敗）。"},{"id":"M20","ch":5,"chapter":"離散機率分配","topic":"二項分配","src":"P.27 馬丁服飾店：n = 3、p = 0.30","lecture":true,"q":"某門市成交機率 p = 0.25，觀察 4 位顧客。恰好 2 位成交的機率約為多少？","table":null,"opts":["0.2109","0.4219","0.0469","0.1187"],"ans":0,"exp":"f(2) = C(4,2) × 0.25² × 0.75² = 6 × 0.0625 × 0.5625 = \u003cb>0.2109\u003c/b>。\u003cbr>完整分配：f(0) = 0.3164、f(1) = 0.4219、f(2) = 0.2109、f(3) = 0.0469、f(4) = 0.0039，總和 = 1 ✓"},{"id":"M21","ch":5,"chapter":"離散機率分配","topic":"卜瓦松分配","src":"P.31 卜瓦松分配：數「一段區間內發生幾次」","lecture":true,"q":"二項分配與卜瓦松分配最關鍵的差別是什麼？","table":null,"opts":["二項用在離散變數，卜瓦松用在連續變數","二項數「固定 n 次裡成功幾次」有上限 n；卜瓦松數「一段區間內發生幾次」沒有上限","二項不需要獨立假設，卜瓦松才需要","卜瓦松的期望值一定大於二項的期望值"],"ans":1,"exp":"兩者\u003cb>數的東西不一樣\u003c/b>。二項的 X 只能是 0 到 n；卜瓦松的 X 可以一直數下去，沒有上限。\u003cbr>辨別訣竅：題目說「\u003cb>做 n 次、每次機率 p\u003c/b>」→ 二項；說「\u003cb>平均每＿＿發生幾次\u003c/b>」→ 卜瓦松。兩者都是離散型，也都需要獨立假設。"},{"id":"M22","ch":5,"chapter":"離散機率分配","topic":"卜瓦松分配","src":"P.33 區間換算：本章最常見的失分點","lecture":true,"q":"某資訊中心客服專線平均每 20 分鐘接到 5 通電話。若要計算「某個 8 分鐘內」的來電機率，公式中的 μ 應該是多少？","table":null,"opts":["5","2","0.625","40"],"ans":1,"exp":"公式裡的 μ 必須是「\u003cb>題目所問的那一段區間\u003c/b>」的平均發生次數。\u003cbr>每分鐘平均 5 ÷ 20 = 0.25 通 → 8 分鐘平均 0.25 × 8 = \u003cb>2\u003c/b> 通。\u003cbr>(A) 是直接把 5 代進去，正是本章最常見的失分點。\u003cb>μ 換錯，後面全錯，而且計算機不會報錯。\u003c/b>"},{"id":"M23","ch":5,"chapter":"離散機率分配","topic":"卜瓦松分配","src":"P.35 練習 5 解答：卜瓦松分配","lecture":true,"q":"承上題（μ = 2），該 8 分鐘內\u003cb>一通電話都沒有\u003c/b>的機率是多少？","table":null,"opts":["0.1353","0","0.2707","0.8647"],"ans":0,"exp":"f(0) = μ⁰·e^(−μ) ÷ 0! = 1 × 0.135335 ÷ 1 = \u003cb>0.1353\u003c/b>。\u003cbr>關鍵：\u003cb>μ⁰ = 1 且 0! = 1\u003c/b>，兩個都等於 1，所以 f(0) 就是 e^(−μ)。\u003cbr>(B) 以為「平均 2 通所以不可能是 0 通」是錯的；(D) 是「至少 1 通」= 1 − f(0) = 0.8647。"},{"id":"M24","ch":5,"chapter":"離散機率分配","topic":"卜瓦松分配","src":"P.37 三種分配怎麼選","lecture":false,"q":"關於卜瓦松分配的期望值與變異數，下列敘述何者正確？","table":null,"opts":["E(X) = μ，Var(X) = μ²","E(X) = μ，Var(X) = μ，兩者相等","E(X) = μ，Var(X) = √μ","E(X) = μ，Var(X) = μ(1 − μ)"],"ans":1,"exp":"卜瓦松分配的 \u003cb>E(X) = Var(X) = μ\u003c/b>，標準差 σ = √μ。這是它最好認的特徵。\u003cbr>實務上可以拿來\u003cb>檢查模型是否適用\u003c/b>：算出樣本平均與樣本變異數比一比，兩者差不多才適合用卜瓦松；若變異數明顯大於平均，表示事件有叢聚現象（例如當機往往一次連三台），卜瓦松會低估尾端風險。\u003cbr>(D) 是把二項的 np(1−p) 誤套過來。"},{"id":"M25","ch":5,"chapter":"離散機率分配","topic":"卜瓦松分配","src":"P.32 收費站：15 分鐘平均 10 輛車","lecture":true,"q":"某機房門禁系統平均每 30 分鐘有 12 人次刷卡進入。某一個 30 分鐘內恰好有 5 人次刷卡的機率約為多少？","table":null,"opts":["0.0127","0.1144","0.1954","0.000006"],"ans":0,"exp":"問的區間就是 30 分鐘，與題目給的區間一致，μ = 12 \u003cb>不必換算\u003c/b>。\u003cbr>f(5) = 12⁵ × e^(−12) ÷ 5! = 248832 × 0.00000614 ÷ 120 = \u003cb>0.0127\u003c/b>。\u003cbr>注意這是「\u003cb>恰好\u003c/b> 5 人次」，不是「5 人次以內」。"},{"id":"M26","ch":5,"chapter":"離散機率分配","topic":"卜瓦松分配","src":"P.36 伺服器要準備多少容量？","lecture":true,"q":"某 API 服務平均每秒收到 4 個請求，伺服器同一秒最多處理 7 個，超過就拒絕。某位同學說「平均才 4 個、容量有 7 個，綽綽有餘」。這個推論的問題是什麼？","table":null,"opts":["推論正確，7 > 4 確實足夠","平均值掩蓋了尾端；P(X ≥ 8) ≈ 0.0511，一天約有 4,420 秒會拒絕請求","應該改用二項分配才算得出來","卜瓦松分配不能用在每秒請求數上"],"ans":1,"exp":"P(X ≥ 8) = 1 − P(X ≤ 7) ≈ \u003cb>0.0511\u003c/b>，約每 20 秒就有一秒會拒絕到請求。\u003cbr>一天 86,400 秒裡大約有 \u003cb>4,420 秒\u003c/b>處於滿載拒絕狀態，對線上服務來說太高了。\u003cbr>\u003cb>只看平均值會完全低估風險，要看整張分配的尾端。\u003c/b>這和第 3 章「只看平均數會誤判」是同一個教訓。"},{"id":"M27","ch":5,"chapter":"離散機率分配","topic":"分配選擇與綜合判斷","src":"P.37 三種分配怎麼選","lecture":true,"q":"下列哪一個情境\u003cb>最適合\u003c/b>用二項分配？","table":null,"opts":["某網站每分鐘的到訪人次","隨機抽查 20 件產品，其中不良品的件數（不良率固定為 3%）","從 100 件產品中不放回抽 10 件的不良品數","擲一顆公正骰子出現的點數"],"ans":1,"exp":"二項的關鍵字是「\u003cb>做 n 次、每次成功機率 p\u003c/b>」：n = 20 固定、不良／良品兩種結果、p = 0.03 固定、各件獨立 ✓\u003cbr>(A) 是「平均每＿＿發生幾次」→ 卜瓦松；(C) 不放回破壞獨立 → 超幾何；(D) 每個結果機會均等 → 離散型均勻分配。"},{"id":"M28","ch":5,"chapter":"離散機率分配","topic":"分配選擇與綜合判斷","src":"P.37 三種分配怎麼選","lecture":true,"q":"拿到一個題目時，判斷該用二項還是卜瓦松，最可靠的切入點是？","table":null,"opts":["看題目數字的大小，數字大用卜瓦松","看題目有沒有給「試驗次數 n」：給了 n 與 p 用二項；只給「平均每＿＿幾次」用卜瓦松","看答案要不要四捨五入","看 X 是不是整數"],"ans":1,"exp":"\u003cb>先找 n。\u003c/b>題目若能明確指出「做了幾次」（抽 20 件、觀察 4 位顧客），而且每次成功機率固定，就是二項，X 的範圍是 0 到 n。\u003cbr>若題目只給「平均每 15 分鐘 10 輛」這種\u003cb>發生率\u003c/b>，根本數不出 n 是多少，就是卜瓦松，X 沒有上限。\u003cbr>兩者的 X 都是整數，數字大小也不是判準。"}],"calc":[{"id":"AC1","ch":1,"chapter":"統計概論與資料","topic":"元素、變數與資料集","src":"作業 1　開放資料集的元素與測量尺度","lecture":true,"stem":"下表是某市「公共自行車站點」開放資料的前幾列（實際檔案共 168 列）。請依此回答各小題。","table":{"head":["站點代號","所在行政區","設站年份","車柱數","使用率等級"],"rows":[["A001","中正區","2019","30","高"],["A002","大安區","2020","24","中"],["A003","信義區","2018","42","高"],["…","…","…","…","…"]]},"parts":[{"label":"(1)","type":"text","q":"這份資料的元素是什麼？共有幾個元素？","ref":"元素是\u003cb>每一個公共自行車站點\u003c/b>，共 \u003cb>168\u003c/b> 個（因為一列代表一個站點，而全檔共 168 列）。","rubric":["明確指出元素是「站點」而不是行政區或欄位","寫出元素個數 168","說明判斷依據（一列代表一個站點）"]},{"label":"(2)","type":"num","unit":"個","q":"這份資料有幾個變數？","ans":5,"tol":0,"sol":"變數就是欄位：站點代號、所在行政區、設站年份、車柱數、使用率等級，共 \u003cb>5\u003c/b> 個。"},{"label":"(3)","type":"text","q":"逐一判斷五個變數的測量尺度，並簡述判斷理由。","ref":"\u003cb>站點代號\u003c/b>：名目 —— 只是識別標籤，A002 不比 A001「大」。\u003cbr>\u003cb>所在行政區\u003c/b>：名目 —— 純分類，無高低之分。\u003cbr>\u003cb>設站年份\u003c/b>：區間 —— 年份差距有意義（2020 比 2018 晚 2 年），但西元 0 年不代表「沒有時間」，所以比值無意義。\u003cbr>\u003cb>車柱數\u003c/b>：比率 —— 0 柱就是沒有，42 柱確實是 21 柱的兩倍。\u003cbr>\u003cb>使用率等級\u003c/b>：順序 —— 高中低可排序，但「高減中」沒有數值意義。","rubric":["五個變數全部判對","說明「設站年份是區間不是比率」的理由（沒有絕對零點）","說明「使用率等級是順序不是名目」的理由（可排序）","（加分）指出站點代號雖是英數字但屬名目"]},{"label":"(4)","type":"text","q":"若把「使用率等級」改成記錄「每日平均借還次數」，測量尺度會怎麼變？這對後續能做的分析有什麼影響？","ref":"會從\u003cb>順序尺度變成比率尺度\u003c/b>（0 次代表真的沒人用，比值也有意義）。\u003cbr>影響：原本只能算次數與百分比、畫長條圖；改成比率尺度之後可以算\u003cb>平均數、標準差、相關係數\u003c/b>，也可以畫直方圖與箱形圖，能做的分析大幅增加。","rubric":["指出變成比率尺度","說明可以開始做算術（平均數、標準差等）","（加分）提到圖形選擇也跟著改變"]}],"note":"這題就是作業 1 的題型。考試時第一步永遠是先問「一列在講誰」，把元素確定下來，變數個數與尺度判斷才會跟著正確。"},{"id":"AC2","ch":1,"chapter":"統計概論與資料","topic":"測量尺度","src":"W1 統計概論　課本 1.2 – 1.4","lecture":false,"stem":"下列六個變數，請分別判斷測量尺度，並回答後續問題。","table":{"head":["編號","變數"],"rows":[["①","學生的學號"],["②","期末考成績（0–100 分）"],["③","T 恤尺寸（S／M／L／XL）"],["④","民國年份"],["⑤","網頁載入時間（秒）"],["⑥","手機作業系統（iOS／Android）"]]},"parts":[{"label":"(1)","type":"num","unit":"個","q":"六個變數中，屬於「類別資料」的有幾個？","ans":3,"tol":0,"sol":"類別資料 = 名目 ＋ 順序。\u003cbr>① 學號（名目）、③ T 恤尺寸（順序）、⑥ 作業系統（名目），共 \u003cb>3\u003c/b> 個。\u003cbr>② 成績、④ 民國年份、⑤ 載入時間屬數量資料。"},{"label":"(2)","type":"num","unit":"個","q":"六個變數中，屬於「比率尺度」的有幾個？","ans":2,"tol":0,"sol":"\u003cb>② 期末考成績\u003c/b>（0 分代表完全不會，80 分是 40 分的兩倍分數）與 \u003cb>⑤ 網頁載入時間\u003c/b>（0 秒代表沒花時間）有絕對零點，共 \u003cb>2\u003c/b> 個。\u003cbr>④ 民國年份只有人為零點，屬區間尺度。"},{"label":"(3)","type":"text","q":"① 學號是數字，為什麼不能算平均數？","ref":"學號只是\u003cb>識別標籤\u003c/b>，數字本身不代表數量或順序 —— 學號 41234567 不比 41234566「多」什麼。\u003cbr>算出來的「平均學號」不對應任何真實意義，所以名目尺度只能算\u003cb>次數與百分比\u003c/b>，不能做算術平均。\u003cbr>判斷訣竅：看這個數字相加、相除之後的結果有沒有意義。","rubric":["指出學號是名目尺度／只是識別標籤","說明平均學號沒有實質意義","（加分）指出名目尺度只能算次數與百分比"]},{"label":"(4)","type":"text","q":"④ 民國年份與 ⑤ 網頁載入時間都是數字，為什麼尺度不同？","ref":"差別在\u003cb>有沒有絕對零點\u003c/b>。\u003cbr>民國 0 年並不代表「沒有時間」，只是人為訂的起算點，所以不能說民國 100 年是民國 50 年的「兩倍」→ \u003cb>區間尺度\u003c/b>。\u003cbr>載入 0 秒代表真的沒花時間，而 2 秒確實是 1 秒的兩倍 → \u003cb>比率尺度\u003c/b>。","rubric":["指出關鍵在絕對零點","舉出民國年份比值無意義的例子","（加分）指出兩者的「差距」都有意義，差別只在比值"]}],"note":null},{"id":"BC1","ch":2,"chapter":"敘述統計：表格與圖形","topic":"類別資料的整理","src":"W2 敘述統計：表格與圖形","lecture":true,"stem":"某電商統計 200 筆訂單的付款方式，次數如下表。","table":{"head":["付款方式","信用卡","行動支付","貨到付款","ATM 轉帳","合計"],"rows":[["次數","88","56","36","20","200"]]},"parts":[{"label":"(1)","type":"num","unit":"","q":"「貨到付款」的相對次數是多少？（四捨五入至小數點後 2 位）","ans":0.18,"tol":0.005,"sol":"相對次數 = 36 ÷ 200 = \u003cb>0.18\u003c/b>"},{"label":"(2)","type":"num","unit":"%","q":"「行動支付」的百分比次數是多少？","ans":28.0,"tol":0.05,"sol":"百分比次數 = 相對次數 × 100 = 0.28 × 100 = \u003cb>28%\u003c/b>"},{"label":"(3)","type":"num","unit":"度","q":"若畫成圓餅圖，「ATM 轉帳」那一塊的圓心角是幾度？","ans":36.0,"tol":0.5,"sol":"圓心角 = 相對次數 × 360° = (20 ÷ 200) × 360° = 0.1 × 360° = \u003cb>36°\u003c/b>\u003cbr>驗算：四塊角度合計 158.4 + 100.8 + 64.8 + 36 = 36° ✓"},{"label":"(4)","type":"text","q":"若要同時呈現四種付款方式的「多寡順序」與「各佔整體多少比例」，你會選長條圖還是圓餅圖？請說明理由。","ref":"\u003cb>比較多寡、看排序 → 長條圖較佳。\u003c/b>人眼比較長度比比較扇形面積準確得多，四個類別排成長條後一眼就能排序。\u003cbr>\u003cb>強調「佔整體的比例」→ 圓餅圖較直觀\u003c/b>，因為整個圓就是 100%。\u003cbr>實務上多半選長條圖，並在長條上直接標百分比，兩種資訊一次給足。類別超過五、六個時圓餅圖會難以辨讀，更應該改用長條圖。","rubric":["明確選出一種並說明理由","提到長條圖適合比較多寡／排序","提到圓餅圖適合呈現佔比","（加分）提出「長條圖上標百分比」這類折衷做法"]}],"note":"相對次數的分母一定是「總數」，不是「類別數」。檢查點：所有相對次數加起來必須等於 1，圓心角加起來必須等於 360°。"},{"id":"BC2","ch":2,"chapter":"敘述統計：表格與圖形","topic":"數量資料的整理","src":"W2 敘述統計：表格與圖形","lecture":true,"stem":"某客服中心記錄 30 通電話的處理時間（分鐘），已由小到大排序：\u003cbr>2　3　4　4　5　6　6　7　7　8　8　9　9　10　10　11　12　12　13　14　15　16　17　19　21　22　24　26　28　29","table":null,"parts":[{"label":"(1)","type":"num","unit":"分","q":"全距是多少？","ans":27,"tol":0,"sol":"全距 = 最大值 − 最小值 = 29 − 2 = \u003cb>27\u003c/b> 分"},{"label":"(2)","type":"num","unit":"分","q":"若要分成 6 組，組距應訂為多少？（取整數）","ans":5,"tol":0,"sol":"組距 ≈ 全距 ÷ 組數 = 27 ÷ 6 = 4.5，\u003cb>向上取整\u003c/b>為 \u003cb>5\u003c/b> 分。\u003cbr>向上取整是必要的：取 4.5 以下會蓋不住最大值 29。"},{"label":"(3)","type":"num","unit":"通","q":"以 0–4、5–9、10–14、15–19、20–24、25–29 分組，「5–9 分」這一組有幾通？","ans":9,"tol":0,"sol":"落在 5–9 分的資料：5、6、6、7、7、8、8、9、9，共 \u003cb>9\u003c/b> 通。\u003cbr>這也是\u003cb>次數最多的一組（眾數組）\u003c/b>。","wide":{"head":["組別（分）","組中點","次數","相對次數","累積次數","累積相對次數"],"rows":[["0–4","2","4","0.133","4","0.133"],["5–9","7","9","0.3","13","0.433"],["10–14","12","7","0.233","20","0.667"],["15–19","17","4","0.133","24","0.8"],["20–24","22","3","0.1","27","0.9"],["25–29","27","3","0.1","30","1"],["合計","—","30","1.000","—","—"]]}},{"label":"(4)","type":"num","unit":"","q":"「15–19 分」這一組的累積相對次數是多少？（四捨五入至小數點後 3 位）","ans":0.8,"tol":0.002,"sol":"累積次數 = 4 + 9 + 7 + 4 = 24\u003cbr>累積相對次數 = 24 ÷ 30 = \u003cb>0.8\u003c/b>\u003cbr>解讀：約 80% 的電話在 19 分鐘內處理完。"},{"label":"(5)","type":"text","q":"由次數分配表判斷這個分配的形狀（左偏、右偏或對稱），並說明你的判斷依據。這對「用平均數描述處理時間」有什麼提醒？","ref":"\u003cb>右偏（正偏）。\u003c/b>次數集中在前半段（5–9 分最多，有 9 通），往右邊逐漸變少並拖出長尾（20 分以上還有 6 通）。\u003cbr>提醒：右偏時少數耗時很久的電話會把平均數往上拉，平均數會\u003cb>高估\u003c/b>「一般通話」的長度。描述這類資料應同時報\u003cb>中位數\u003c/b>，排班或訂 SLA 時更要看百分位數而不是平均數。","rubric":["正確判斷為右偏","依據次數分配說明（前段集中、右側拖尾）","指出平均數會被長尾拉高","（加分）建議改用中位數或百分位數"]}],"note":"分組的三個原則：組與組不重疊、涵蓋全部資料、組距盡量相等。組中點 =（下界 + 上界）÷ 2，之後算分組資料的平均數時會用到。"},{"id":"BC3","ch":2,"chapter":"敘述統計：表格與圖形","topic":"兩個變數的整理","src":"W2 敘述統計：表格與圖形","lecture":true,"stem":"某電商記錄 300 位顧客的來源裝置與是否完成購買，交叉表如下。","table":{"head":["","完成購買","未完成","合計"],"rows":[["手機","96","144","240"],["桌機","36","24","60"],["合計","132","168","300"]]},"parts":[{"label":"(1)","type":"num","unit":"%","q":"整體的完成購買率是多少？","ans":44.0,"tol":0.05,"sol":"132 ÷ 300 × 100% = \u003cb>44%\u003c/b>"},{"label":"(2)","type":"num","unit":"%","q":"手機使用者的完成購買率是多少？","ans":40.0,"tol":0.05,"sol":"分母要用\u003cb>手機使用者的合計\u003c/b>，不是總人數：\u003cbr>96 ÷ 240 × 100% = \u003cb>4%\u003c/b>"},{"label":"(3)","type":"num","unit":"%","q":"桌機使用者的完成購買率是多少？","ans":60.0,"tol":0.05,"sol":"36 ÷ 60 × 100% = \u003cb>6%\u003c/b>\u003cbr>桌機（6%）明顯高於手機（4%）。"},{"label":"(4)","type":"text","q":"行銷主管看到「手機完成購買 96 人、桌機只有 36 人」，就主張應該把預算全部投到手機。請評論這個推論。","ref":"這個推論混淆了\u003cb>絕對人數\u003c/b>與\u003cb>比率\u003c/b>。\u003cbr>手機完成人數多，是因為手機使用者本來就多（240 vs 60 人）。換算成完成率，手機只有 4%，反而\u003cb>低於\u003c/b>桌機的 6%。\u003cbr>合理的解讀是：手機流量大但轉換差，該做的是\u003cb>找出手機結帳流程的問題\u003c/b>（例如表單太長、付款方式太少），而不是單純加碼預算。","rubric":["指出推論有問題","用兩個完成率的數字佐證","說明人數多是因為基數大","（加分）提出合理的行動建議"]}],"note":"交叉表的百分比有三種算法：對總數、對列合計、對行合計。要比較「哪一群的比率高」，一定要用\u003cb>該群自己的合計\u003c/b>當分母。"},{"id":"CC1","ch":3,"chapter":"敘述統計：數值量數","topic":"位置量數","src":"W3 P.13 本章的主角：畢業生起薪","lecture":true,"stem":"某系 12 位應屆畢業生的月起薪（元）如下（未排序）：\u003cbr>32,500　33,800　34,200　32,900　31,500　36,400　33,100　35,200　34,800　32,900　42,000　33,200","table":null,"parts":[{"label":"(1)","type":"num","unit":"元","q":"計算平均起薪 x̄。","ans":34375.0,"tol":1,"sol":"Σx = 412,500，n = 12\u003cbr>x̄ = 412,500 ÷ 12 = \u003cb>34,375\u003c/b> 元"},{"label":"(2)","type":"num","unit":"元","q":"計算中位數。（提醒：先排序）","ans":33500.0,"tol":1,"sol":"排序後：31,500　32,500　32,900　32,900　33,100　33,200　33,800　34,200　34,800　35,200　36,400　42,000\u003cbr>n = 12 為偶數，取位置 6、7 的平均：（33,200 + 33,800）÷ 2 = \u003cb>33,500\u003c/b> 元"},{"label":"(3)","type":"num","unit":"元","q":"眾數是多少？","ans":32900,"tol":1,"sol":"只有 \u003cb>32,900\u003c/b> 出現 2 次，其餘各出現 1 次，所以眾數 = 32,900 元。\u003cbr>本例三個中心：平均數 34,375 > 中位數 33,500 > 眾數 32,900 —— 三個都叫「中心」，卻是三個不同的數字。"},{"label":"(4)","type":"num","unit":"元","q":"求第 80 百分位數 P₈₀。（請先寫出位置 L₈₀）","ans":35680.0,"tol":1,"sol":"L₈₀ =（80 / 100）×（12 + 1）= 0.8 × 13 = \u003cb>10.4\u003c/b>\u003cbr>落在位置 10（35,200）與 11（36,400）之間，距離位置 10 有 0.4。\u003cbr>P₈₀ = 35,200 + 0.4 × （36,400 − 35,200）= \u003cb>35,680\u003c/b> 元\u003cbr>解讀：起薪 35,680 元的人，大約贏過 80% 的同屆畢業生。"},{"label":"(5)","type":"text","q":"若要向學弟妹說明「這一屆的起薪水準」，你會報平均數還是中位數？請說明理由。","ref":"\u003cb>報中位數（33,500 元）較合適。\u003c/b>\u003cbr>這組資料有一筆 42,000 元明顯偏高，把平均數拉到 34,375 元，高於中位數。拿掉那一筆之後，其餘 11 人的平均只有 33,681.82 元。\u003cbr>薪資資料典型右偏，用平均數會讓學弟妹對「一般人拿多少」產生過高期待。政府公布家戶所得中位數正是同樣的理由。\u003cb>最好的做法是兩個都報，並說明差異來自哪一筆。\u003c/b>","rubric":["明確選擇中位數並說明理由","指出有極端值把平均數拉高","引用具體數字佐證（平均數與中位數的差距）","（加分）提出兩個都報或同時報標準差"]}],"note":"三個位置量數各有脾氣：平均數用到全部資料但怕極端值；中位數對極端值免疫；眾數是唯一能用在類別資料上的。"},{"id":"CC2","ch":3,"chapter":"敘述統計：數值量數","topic":"百分位數與四分位數","src":"W3 P.21 百分位數：Lp 公式與內插","lecture":true,"stem":"某 API 的 12 次回應時間（ms），已由小到大排序：\u003cbr>120　145　160　185　210　240　275　320　390　460　520　880","table":null,"parts":[{"label":"(1)","type":"num","unit":"ms","q":"求 Q₁（第 25 百分位數）。請先寫出位置 L₂₅。","ans":166.25,"tol":0.5,"sol":"L₂₅ = 0.25 ×（12 + 1）= \u003cb>3.25\u003c/b>\u003cbr>落在位置 3（160）與 4（185）之間，距離 0.25\u003cbr>Q₁ = 160 + 0.25 × （185 − 160）= \u003cb>166.25\u003c/b> ms"},{"label":"(2)","type":"num","unit":"ms","q":"求 Q₂，並用中位數的定義算法驗證一次。","ans":257.5,"tol":0.5,"sol":"L₅₀ = 0.5 ×（12 + 1）= 6.5，落在位置 6（240）與 7（275）之間。\u003cbr>Q₂ = 240 + 0.5 ×（275 − 240）= \u003cb>257.5\u003c/b> ms\u003cbr>驗證：n = 12 為偶數，中位數取中間兩個的平均 （240 + 275）÷ 2 = 257.5 ms ✓ 兩者一致。\u003cbr>\u003cb>Q₂ 一定等於中位數\u003c/b>，這是很好用的檢查點。"},{"label":"(3)","type":"num","unit":"ms","q":"求 Q₃（第 75 百分位數）。","ans":442.5,"tol":0.5,"sol":"L₇₅ = 0.75 ×（12 + 1）= \u003cb>9.75\u003c/b>\u003cbr>落在位置 9（390）與 10（460）之間\u003cbr>Q₃ = 390 + 0.75 × （460 − 390）= \u003cb>442.5\u003c/b> ms"},{"label":"(4)","type":"num","unit":"ms","q":"求四分位距 IQR。","ans":276.25,"tol":0.5,"sol":"IQR = Q₃ − Q₁ = 442.5 − 166.25 = \u003cb>276.25\u003c/b> ms\u003cbr>意思是中間 50% 的請求，回應時間落在 166 到 442 ms 之間。"},{"label":"(5)","type":"text","q":"SLA 寫明「第 90 百分位的回應時間須低於 600 ms」。請計算 P₉₀ 並判斷是否達標。若未達標，為什麼不能用「中位數只有 258 ms」來交差？","ref":"L₉₀ = 0.9 ×（12 + 1）= 11.7，落在位置 11（520）與 12（880）之間。\u003cbr>P₉₀ = 520 + 0.7 × （880 − 520）= \u003cb>772 ms\u003c/b>，大於 600 ms → \u003cb>未達標\u003c/b>。\u003cbr>中位數只描述「中間那一個」使用者的體驗，但 SLA 關心的是\u003cb>最慢的那一成使用者\u003c/b>。這組資料有 880 ms 這種長尾，中位數完全看不出來。用中位數交差等於拿好看的數字掩蓋真正的問題。","rubric":["算出 P₉₀ ≈ 772 ms","判斷未達標","說明 SLA 指定 P₉₀ 就必須算 P₉₀","（加分）指出中位數掩蓋長尾／指出離群值的影響"]}],"note":"Lp 算出來的是\u003cb>位置\u003c/b>，不是數值 —— 這是本章最高頻的失分點。位置是整數就直接取值，是小數才需要內插。另外注意是（n + 1）不是 n。"},{"id":"CC3","ch":3,"chapter":"敘述統計：數值量數","topic":"離散量數","src":"W3 離散量數：變異數與標準差","lecture":true,"stem":"甲、乙兩條產線各記錄 8 天的日產量（件）：\u003cbr>甲：48　52　50　49　51　50　52　48\u003cbr>乙：35　68　42　58　30　72　45　50","table":null,"parts":[{"label":"(1)","type":"num","unit":"件","q":"計算甲產線的平均日產量。","ans":50.0,"tol":0.05,"sol":"x̄ = 400 ÷ 8 = \u003cb>50\u003c/b> 件"},{"label":"(2)","type":"num","unit":"","q":"計算甲產線的樣本變異數 s²。","ans":2.5714,"tol":0.05,"sol":"Σ(x − x̄)² = 18\u003cbr>s² = 18 ÷ (8 − 1) = \u003cb>2.5714\u003c/b>\u003cbr>\u003cb>分母是 n − 1 = 7\u003c/b>，不是 8。","wide":{"head":["x","x − x̄","(x − x̄)²"],"rows":[["48","-2","4"],["52","2","4"],["50","0","0"],["49","-1","1"],["51","1","1"],["50","0","0"],["52","2","4"],["48","-2","4"],["合計","0","18"]]}},{"label":"(3)","type":"num","unit":"件","q":"計算甲產線的樣本標準差 s。","ans":1.6036,"tol":0.02,"sol":"s = √2.5714 = \u003cb>1.6036\u003c/b> ≈ 1.6 件\u003cbr>標準差與原始資料\u003cb>同單位\u003c/b>，所以可以直接解讀；變異數的單位是「件²」，沒辦法解讀，這就是實務上幾乎都報 s 而不報 s² 的原因。"},{"label":"(4)","type":"num","unit":"%","q":"計算乙產線的變異係數 CV。（乙產線 x̄ 與 s 請自行算出）","ans":30.1,"tol":0.3,"sol":"乙：x̄ = 400 ÷ 8 = 50，s = 15.0523\u003cbr>CV = (s ÷ x̄) × 100% = (15.05 ÷ 50) × 100% = \u003cb>30.1%\u003c/b>\u003cbr>對照甲的 CV = 3.21%。"},{"label":"(5)","type":"text","q":"生產主管要挑一條產線接急單，應該挑哪一條？請以 x̄ 與 s 為依據說明。","ref":"\u003cb>挑甲產線。\u003c/b>兩條的平均日產量完全相同（都是 50 件），但甲的標準差只有 1.6 件，乙高達 15.05 件，變異係數 3.2% 對 30.1%，差距超過 9 倍。\u003cbr>急單最怕的是\u003cb>交期不確定\u003c/b>。乙產線曾出現 30 件的低點，若剛好落在交期前就會開天窗。平均產量一樣時，\u003cb>波動小的那條才可靠\u003c/b>。","rubric":["明確挑出甲產線","指出兩條平均數相同","引用標準差或變異係數的數字做比較","（加分）連結到交期風險或最低產量"]}],"note":"平均數相同時直接比 s；平均數不同時一定要改比 CV，因為 CV 無單位，才能跨量級與跨單位比較。"},{"id":"CC4","ch":3,"chapter":"敘述統計：數值量數","topic":"五數彙總與箱形圖","src":"W3 五數彙總與箱形圖","lecture":true,"stem":"某批訂單的處理天數，已由小到大排序（n = 12）：\u003cbr>12　15　18　19　21　22　24　25　27　30　33　58","table":null,"parts":[{"label":"(1)","type":"num","unit":"天","q":"求 Q₁。","ans":18.25,"tol":0.3,"sol":"L₂₅ = 0.25 ×（12 + 1）= 3.25\u003cbr>Q₁ = \u003cb>18.25\u003c/b> 天"},{"label":"(2)","type":"num","unit":"天","q":"求 Q₃。","ans":29.25,"tol":0.3,"sol":"L₇₅ = 0.75 ×（12 + 1）= 9.75\u003cbr>Q₃ = \u003cb>29.25\u003c/b> 天"},{"label":"(3)","type":"num","unit":"天","q":"求 IQR，並算出上界限（upper fence）。此處填上界限。","ans":45.75,"tol":0.5,"sol":"IQR = 29.25 − 18.25 = 11\u003cbr>上界限 = Q₃ + 1.5 × IQR = 29.25 + 1.5 × 11 = \u003cb>45.75\u003c/b> 天\u003cbr>下界限 = Q₁ − 1.5 × IQR = 1.75 天"},{"label":"(4)","type":"text","q":"寫出五數彙總，並指出哪些資料是離群值。","ref":"五數彙總：最小值 12、Q₁ 18.25、Q₂（中位數）23、Q₃ 29.25、最大值 58。\u003cbr>界限為 [1.75, 45.75]，\u003cb>58 超出上界限，是離群值\u003c/b>。\u003cbr>畫箱形圖時，鬚只畫到界限內最大的實際資料 33，離群值另外用點標出。","rubric":["五個數字全部正確","指出 58 是離群值","說明依據是 1.5 × IQR 界限","（加分）說明鬚要畫到界限內的實際資料點"]},{"label":"(5)","type":"text","q":"作業承辦人主張把 58 天那一筆刪掉，因為「它是離群值」。請評論這個做法。","ref":"\u003cb>不應該直接刪除。\u003c/b>被判定為離群值只代表「它和其他資料差很遠」，不代表它是錯的。\u003cbr>正確流程是：先查這筆資料\u003cb>是不是登錄錯誤\u003c/b>（打錯一個 0、單位填錯）。若確認是真實發生的事（例如那張訂單碰到缺料或連假），就\u003cb>必須保留\u003c/b>，並在報告中說明原因。\u003cbr>真正該做的是去問「為什麼會拖這麼久」—— 離群值往往是流程問題的線索，刪掉它等於把問題藏起來。若擔心影響統計量，可以同時報含與不含離群值的兩組數字。","rubric":["明確反對直接刪除","指出要先確認是否為登錄錯誤","說明真實資料應保留並說明","（加分）指出離群值可能是流程問題的線索"]}],"note":"四分位數用的是課本 Lp 公式（n + 1）。箱形圖的鬚畫到「界限內的實際資料」，不是畫到界限本身，這一點很常被畫錯。"},{"id":"CC5","ch":3,"chapter":"敘述統計：數值量數","topic":"相關性量數","src":"W3 相關性量數","lecture":true,"stem":"某店 8 個月的廣告費與當月業績（單位：萬元）如下表。","table":{"head":["月份","1","2","3","4","5","6","7","8"],"rows":[["廣告費 x","12","18","15","25","30","22","35","28"],["業績 y","180","240","210","320","390","290","430","350"]]},"parts":[{"label":"(1)","type":"num","unit":"萬元","q":"計算廣告費的平均數 x̄。","ans":23.125,"tol":0.05,"sol":"x̄ = 185 ÷ 8 = \u003cb>23.125\u003c/b> 萬元"},{"label":"(2)","type":"num","unit":"萬元","q":"計算業績的平均數 ȳ。","ans":301.25,"tol":0.05,"sol":"ȳ = 2410 ÷ 8 = \u003cb>301.25\u003c/b> 萬元"},{"label":"(3)","type":"num","unit":"","q":"計算樣本共變異數 s(xy)。","ans":689.821,"tol":1.0,"sol":"s(xy) = Σ(x − x̄)(y − ȳ) ÷ (n − 1)\u003cbr>Σ(x − x̄)(y − ȳ) = 4828.75\u003cbr>s(xy) = 4828.75 ÷ 7 = \u003cb>689.821\u003c/b>\u003cbr>共變異數為\u003cb>正\u003c/b>，表示兩者同向變動。但它的大小受單位影響，不能拿來判斷關係強弱。","wide":{"head":["x","y","x − x̄","y − ȳ","(x − x̄)(y − ȳ)"],"rows":[["12","180","-11.125","-121.25","1348.906"],["18","240","-5.125","-61.25","313.906"],["15","210","-8.125","-91.25","741.406"],["25","320","1.875","18.75","35.156"],["30","390","6.875","88.75","610.156"],["22","290","-1.125","-11.25","12.656"],["35","430","11.875","128.75","1528.906"],["28","350","4.875","48.75","237.656"],["合計","—","0","0","4828.75"]]}},{"label":"(4)","type":"num","unit":"","q":"計算相關係數 r。（四捨五入至小數點後 4 位）","ans":0.9979,"tol":0.01,"sol":"s(x) = 7.8638，s(y) = 87.9021\u003cbr>r = s(xy) ÷ (s(x) × s(y)) = 689.821 ÷ (7.8638 × 87.9021) = \u003cb>0.9979\u003c/b>\u003cbr>r 非常接近 +1，表示\u003cb>很強的正線性關係\u003c/b>。"},{"label":"(5)","type":"text","q":"行銷經理看到 r = 0.9979，主張「只要加倍廣告預算，業績就會跟著加倍」。請評論這個推論。","ref":"這個推論有兩個問題。\u003cbr>\u003cb>一、相關不等於因果。\u003c/b>r = 0.9979 只說明兩者\u003cb>同向且接近直線\u003c/b>，不能證明廣告「造成」業績。也可能是旺季同時推高了廣告預算與業績，或是業績好才敢加碼廣告（反向因果）。\u003cbr>\u003cb>二、r 不是斜率。\u003c/b>r 衡量關係的強弱與方向，不告訴你「增加 1 萬會多賺多少」，那是迴歸係數的工作。而且本資料的廣告費只在 12–35 萬元之間，\u003cb>外推到「加倍」已經超出資料範圍\u003c/b>，關係未必還是線性（邊際效益通常會遞減）。","rubric":["指出相關不等於因果","舉出至少一個替代解釋（共同原因或反向因果）","指出 r 不是斜率、不能用來預測增加量","（加分）指出外推超出資料範圍的風險"]}],"note":"共變異數看方向、相關係數看強弱。r = 0 只代表沒有\u003cb>線性\u003c/b>關係 —— U 形關係的 r 也可能接近 0，但關係其實很強。"},{"id":"DC1","ch":4,"chapter":"機率基礎概念","topic":"計數法則與機率指派","src":"W4 計數法則","lecture":true,"stem":"某專題競賽的報名規定如下，請回答各小題。","table":null,"parts":[{"label":"(1)","type":"num","unit":"種","q":"系上有 9 位同學，要組成 3 人的參賽隊伍（不分職務），共有幾種組隊方式？","ans":84,"tol":0,"sol":"不分職務 → 順序不重要 → 用\u003cb>組合\u003c/b>：\u003cbr>C(9, 3) = 9! ÷ (3! × 6!) = \u003cb>84\u003c/b> 種"},{"label":"(2)","type":"num","unit":"種","q":"若改成要選出「組長、程式、簡報」三個不同職務（9 人中選 3 人），共有幾種安排？","ans":504,"tol":0,"sol":"分職務 → 順序重要 → 用\u003cb>排列\u003c/b>：\u003cbr>P(9, 3) = 9 × 8 × 7 = \u003cb>504\u003c/b> 種\u003cbr>剛好是 (1) 的 3! = 6 倍，因為每一組 3 人都可以有 6 種職務分配。"},{"label":"(3)","type":"num","unit":"種","q":"參賽作品要從 4 個題目方向、3 種技術、5 個應用場域中各選一項。共有幾種主題組合？","ans":60,"tol":0,"sol":"\u003cb>多步驟實驗的計數法則\u003c/b>：各步驟方法數相乘。\u003cbr>4 × 3 × 5 = \u003cb>60\u003c/b> 種"},{"label":"(4)","type":"text","q":"(1) 與 (2) 的差別在哪裡？請說明判斷「用組合還是用排列」的依據。","ref":"差別在\u003cb>順序重不重要\u003c/b>。\u003cbr>(1) 只問「哪三個人」，甲乙丙和丙乙甲是同一隊 → \u003cb>組合\u003c/b>。\u003cbr>(2) 還要指定誰當組長、誰寫程式，甲當組長和乙當組長是不同安排 → \u003cb>排列\u003c/b>。\u003cbr>判斷方法：把其中兩個人\u003cb>對調位置\u003c/b>，若結果算同一種就用組合，算不同種就用排列。\u003cbr>兩者關係是 P(n,r) = C(n,r) × r!。","rubric":["指出關鍵在順序是否重要","分別說明兩小題為何屬於組合／排列","（加分）提出「對調兩人看看算不算同一種」這類具體判準","（加分）寫出 P(n,r) = C(n,r) × r!"]}],"note":null},{"id":"DC2","ch":4,"chapter":"機率基礎概念","topic":"加法律與互斥","src":"W4 加法律與互斥","lecture":true,"stem":"某系 400 位學生的修課與證照情形如下表。令 A = 修過程式設計、B = 通過證照考試。","table":{"head":["人數","通過證照 B","未通過 Bᶜ","合計"],"rows":[["修過程式設計 A","168","112","280"],["沒修過 Aᶜ","36","84","120"],["合　計","204","196","400"]]},"parts":[{"label":"(1)","type":"num","unit":"","q":"求 P(A)。","ans":0.7,"tol":0.005,"sol":"P(A) = 280 ÷ 400 = \u003cb>0.7\u003c/b>"},{"label":"(2)","type":"num","unit":"","q":"求 P(B)。","ans":0.51,"tol":0.005,"sol":"P(B) = 204 ÷ 400 = \u003cb>0.51\u003c/b>"},{"label":"(3)","type":"num","unit":"","q":"求 P(A ∩ B)。","ans":0.42,"tol":0.005,"sol":"P(A ∩ B) = 168 ÷ 400 = \u003cb>0.42\u003c/b>\u003cbr>交集就是\u003cb>兩個條件同時成立\u003c/b>的那一格。"},{"label":"(4)","type":"num","unit":"","q":"用加法律求 P(A ∪ B)。","ans":0.79,"tol":0.005,"sol":"P(A ∪ B) = P(A) + P(B) − P(A ∩ B)\u003cbr>= 0.7 + 0.51 − 0.42 = \u003cb>0.79\u003c/b>\u003cbr>驗算：直接數人數也可以 —— (168 + 112 + 36) ÷ 400 = 316 ÷ 400 = 0.79 ✓"},{"label":"(5)","type":"text","q":"A 與 B 互斥嗎？為什麼？","ref":"\u003cb>不互斥。\u003c/b>互斥的定義是兩事件不能同時發生，即 P(A ∩ B) = 0。\u003cbr>但本題有 168 位學生\u003cb>既修過程式設計又通過證照\u003c/b>，P(A ∩ B) = 0.42 ≠ 0，所以兩者不互斥。\u003cbr>這也是為什麼 (4) 一定要減掉交集 —— 否則那 168 人會被算兩次。","rubric":["明確回答不互斥","指出 P(A ∩ B) = 0.42 ≠ 0","（加分）連結到加法律為何要減交集"]}],"note":"交叉表題型的固定流程：先把四格與邊際合計看清楚，再確認每一題問的\u003cb>分母是誰\u003c/b>（全體、某一列、還是某一行）。"},{"id":"DC3","ch":4,"chapter":"機率基礎概念","topic":"條件機率","src":"W4 條件機率","lecture":true,"stem":"沿用上一題的交叉表（A = 修過程式設計、B = 通過證照考試）。","table":{"head":["人數","通過證照 B","未通過 Bᶜ","合計"],"rows":[["修過程式設計 A","168","112","280"],["沒修過 Aᶜ","36","84","120"],["合　計","204","196","400"]]},"parts":[{"label":"(1)","type":"num","unit":"","q":"求 P(B | A)，也就是修過程式設計的學生當中通過證照的比例。","ans":0.6,"tol":0.005,"sol":"P(B | A) = P(A ∩ B) ÷ P(A) = 168 ÷ 280 = \u003cb>0.6\u003c/b>\u003cbr>\u003cb>分母換成「修過」那一列的合計\u003c/b>，不再是全系 400 人。"},{"label":"(2)","type":"num","unit":"","q":"求 P(B | Aᶜ)，也就是沒修過的學生當中通過證照的比例。","ans":0.3,"tol":0.005,"sol":"P(B | Aᶜ) = 36 ÷ 120 = \u003cb>0.3\u003c/b>\u003cbr>兩者相差 2 倍。"},{"label":"(3)","type":"num","unit":"","q":"求 P(A | B)，也就是通過證照的學生當中修過程式設計的比例。","ans":0.8235,"tol":0.005,"sol":"P(A | B) = 168 ÷ 204 = \u003cb>0.8235\u003c/b>\u003cbr>注意這和 (1) 的 P(B | A) = 0.6 \u003cb>完全不同\u003c/b> —— 分母一個是「修過的人」，一個是「通過的人」。\u003cbr>\u003cb>P(B|A) ≠ P(A|B)\u003c/b>，把條件寫反是本章最高頻的失分。"},{"label":"(4)","type":"num","unit":"","q":"用 P(A ∩ B) 與 P(A) × P(B) 判斷兩事件是否獨立。此處填 P(A) × P(B)。","ans":0.357,"tol":0.005,"sol":"P(A) × P(B) = 0.7 × 0.51 = \u003cb>0.357\u003c/b>\u003cbr>而實際的 P(A ∩ B) = 0.42。\u003cbr>0.42 ≠ 0.357 → \u003cb>兩事件不獨立\u003c/b>。"},{"label":"(5)","type":"text","q":"有人看到這個結果就說「修程式設計會提高證照通過率」。這個推論妥當嗎？","ref":"\u003cb>不夠妥當。\u003c/b>資料確實顯示修過的通過率（0.6）是沒修過的（0.3）的 2 倍，兩者也確實不獨立。\u003cbr>但這是\u003cb>觀察資料\u003c/b>而非實驗。很可能本來就對程式有興趣、比較用功的學生，同時選擇了修課\u003cb>也\u003c/b>去認真準備證照（\u003cb>自我選擇偏誤\u003c/b>），真正的原因是「用功程度」而不是「修課」。\u003cbr>要證明因果，必須\u003cb>隨機指派\u003c/b>誰修課誰不修，再比較兩組的通過率。","rubric":["指出推論不妥或至少要保留","引用兩個條件機率的數字","提出替代解釋（自我選擇偏誤或共同原因）","（加分）指出需要隨機指派的實驗設計"]}],"note":"條件機率的核心只有一句話：\u003cb>分母換成條件那一群\u003c/b>。作答前先在題目上圈出「在…之中」是哪一群，分母就定下來了。"},{"id":"DC4","ch":4,"chapter":"機率基礎概念","topic":"貝氏定理","src":"W4 貝氏定理","lecture":true,"stem":"某企業的網路監控系統，所有連線中有 \u003cb>3%\u003c/b> 是真正的異常連線（事件 F），其餘 97% 是正常連線（Fᶜ）。系統把異常連線標記為可疑的機率是 \u003cb>0.92\u003c/b>，把正常連線誤標為可疑的機率是 \u003cb>0.05\u003c/b>。現在有一筆連線被標記為可疑（事件 A）。建議用課堂教過的「表格求解法」五個欄位作答。","table":null,"parts":[{"label":"(1)","type":"num","unit":"","q":"求聯合機率 P(F ∩ A)。（保留到小數點後 4 位）","ans":0.0276,"tol":0.0005,"sol":"P(F ∩ A) = P(F) × P(A | F) = 0.03 × 0.92 = \u003cb>0.0276\u003c/b>"},{"label":"(2)","type":"num","unit":"","q":"求聯合機率 P(Fᶜ ∩ A)。","ans":0.0485,"tol":0.0005,"sol":"P(Fᶜ ∩ A) = P(Fᶜ) × P(A | Fᶜ) = 0.97 × 0.05 = \u003cb>0.0485\u003c/b>\u003cbr>注意這個\u003cb>偽陽性的機率，比 (1) 的真陽性還大\u003c/b>。"},{"label":"(3)","type":"num","unit":"","q":"求 P(A)，也就是一筆連線被標記為可疑的總機率。","ans":0.0761,"tol":0.0005,"sol":"P(A) = P(F ∩ A) + P(Fᶜ ∩ A) = 0.0276 + 0.0485 = \u003cb>0.0761\u003c/b>\u003cbr>這一步就是\u003cb>全機率定理\u003c/b>：把所有通往 A 的路徑加起來。"},{"label":"(4)","type":"num","unit":"","q":"求 P(F | A)：被標記為可疑的連線，真的是異常的機率是多少？","ans":0.362681,"tol":0.002,"sol":"P(F | A) = P(F ∩ A) ÷ P(A) = 0.0276 ÷ 0.0761 = \u003cb>0.3627\u003c/b>\u003cbr>也就是約 \u003cb>36.3%\u003c/b>。","wide":{"head":["事件","先驗 P(Fᵢ)","條件 P(A|Fᵢ)","聯合 P(Fᵢ∩A)","後驗 P(Fᵢ|A)"],"rows":[["F（異常）","0.03","0.92","0.0276","0.3627"],["Fᶜ（正常）","0.97","0.05","0.0485","0.6373"],["合計","1.00","—","0.0761","1.0000"]]}},{"label":"(5)","type":"text","q":"偵測率高達 0.92，為什麼 P(F | A) 只有約 36%？這個數字對資安團隊代表什麼管理意義？","ref":"關鍵在\u003cb>基本比率\u003c/b>：正常連線佔了 97%，就算誤標率只有 0.05，產生的偽陽性 0.0485 仍\u003cb>大於\u003c/b>真陽性 0.0276。\u003cbr>管理意義：每 10 筆警報大約只有 4 筆是真的，約 64% 的人工複核工時花在誤報上。團隊該做的是\u003cb>降低誤報率 P(A | Fᶜ)\u003c/b>，那比再提高偵測率有效得多 —— 也要注意「警報疲勞」會讓人開始忽略警報。","rubric":["指出基本比率／正常連線基數太大的影響","比較真陽性與偽陽性的數字","翻譯成管理語言（誤報佔用的工時比例）","（加分）提出降低誤報率的建議或提到警報疲勞"]}],"note":"貝氏題的固定流程：先寫先驗、再寫條件、相乘得聯合、加總得 P(A)、相除得後驗。最常見的錯誤是把 P(A | F) 直接當成 P(F | A)，條件方向寫反。"},{"id":"DC5","ch":4,"chapter":"機率基礎概念","topic":"獨立與乘法律","src":"W4 獨立與乘法律","lecture":true,"stem":"某電商網站的結帳系統由兩個獨立的服務組成：金流服務與庫存服務。根據維運紀錄，金流服務在尖峰時段逾時的機率是 0.08，庫存服務是 0.05，兩者互相獨立。","table":null,"parts":[{"label":"(1)","type":"num","unit":"","q":"兩個服務同時逾時的機率是多少？","ans":0.004,"tol":0.0005,"sol":"獨立事件乘法律：P(金 ∩ 庫) = 0.08 × 0.05 = \u003cb>0.0040\u003c/b>"},{"label":"(2)","type":"num","unit":"","q":"兩個服務都正常的機率是多少？","ans":0.874,"tol":0.0005,"sol":"P(兩者皆正常) = (1 − 0.08) × (1 − 0.05) = 0.92 × 0.95 = \u003cb>0.8740\u003c/b>"},{"label":"(3)","type":"num","unit":"","q":"至少有一個服務逾時的機率是多少？（提示：用餘集）","ans":0.126,"tol":0.0005,"sol":"P(至少一個逾時) = 1 − P(兩者皆正常) = 1 − 0.8740 = \u003cb>0.1260\u003c/b>\u003cbr>也可以用加法律驗算：0.08 + 0.05 − 0.0040 = 0.1260 ✓\u003cbr>\u003cb>看到「至少」先想餘集\u003c/b>，通常是最快的路。"},{"label":"(4)","type":"text","q":"若維運團隊發現兩個服務其實部署在同一台實體主機上，上述計算會有什麼問題？對 (1) 與 (3) 的答案各有什麼影響？","ref":"\u003cb>獨立假設不成立，整組計算都會低估風險。\u003c/b>\u003cbr>部署在同一台主機上時，主機本身的問題（CPU 滿載、網路中斷、斷電）會讓兩個服務\u003cb>同時\u003c/b>出事，兩者是\u003cb>正相關\u003c/b>而非獨立。\u003cbr>影響：(1) 同時逾時的實際機率會\u003cb>高於\u003c/b> 0.0040，因為多了「共同原因一起掛」這條路徑；(3) 至少一個逾時的機率則會\u003cb>低於\u003c/b> 0.1260，因為故障集中在同一時間，分散的次數反而變少。\u003cbr>實務上這正是\u003cb>備援要跨主機、跨機房\u003c/b>的理由 —— 備援的價值完全建立在「獨立」這個假設上。","rubric":["指出獨立假設不成立","說明共同原因會讓兩者同時故障（正相關）","說明 (1) 的機率會被低估","（加分）連結到備援要跨主機／跨機房的設計原則"]}],"note":"乘法律 P(A ∩ B) = P(A) × P(B|A)，只有在\u003cb>獨立\u003c/b>時才簡化成 P(A) × P(B)。考試時務必先確認題目有沒有明講「獨立」。"},{"id":"E01","ch":5,"chapter":"離散機率分配","topic":"隨機變數與機率分配","src":"P.15 練習 2：機率分配與事件機率","lecture":true,"stem":"某影音 App 記錄「使用者單次開啟所觀看的影片數」X，依過去資料整理出下列分配：","table":{"head":["x（部）","0","1","2","3","4"],"rows":[["f(x)","0.08","0.22","0.34","0.24","0.12"]]},"parts":[{"label":"(1)","type":"text","q":"先檢查：這是一個合法的機率分配嗎？請寫出你依據的兩個條件。","ref":"合法。條件一：每個 f(x) 都 ≥ 0 ✓。條件二：總和 = 0.08 + 0.22 + 0.34 + 0.24 + 0.12 = 1 = 1 ✓。","rubric":["寫出「f(x) ≥ 0」這個條件","寫出「Σf(x) = 1」這個條件","實際把五個機率加起來驗算，而不是只說「看起來沒問題」"]},{"label":"(2)","type":"num","unit":"","q":"P(X ≥ 2) 是多少？也就是「至少觀看 2 部」的機率。","ans":0.7,"tol":0.001,"sol":"X ≥ 2 包含 x = 2, 3, 4（\u003cb>含 2\u003c/b>）：0.34 + 0.24 + 0.12 = \u003cb>0.7\u003c/b>"},{"label":"(3)","type":"num","unit":"","q":"P(1 ≤ X ≤ 3) 是多少？請先圈出屬於這個事件的 x 值再相加。","ans":0.8,"tol":0.001,"sol":"兩端都含，x = 1, 2, 3：0.22 + 0.34 + 0.24 = \u003cb>0.8\u003c/b>"},{"label":"(4)","type":"text","q":"若產品團隊的目標是「七成以上的使用者至少看 2 部」，根據這張表，目標達成了嗎？","ref":"沒有達成。至少看 2 部的比例是 7%，離目標 70% 還差 0 個百分點。團隊該做的是改善推薦演算法，而不是改目標。","rubric":["明確回答「沒有達成」","引用 (2) 算出的 0.7 作為依據","寫出與 70% 的差距"]}],"note":"(2) 的「至少 2 部」含 2；若題目改寫成「超過 2 部」就不含 2，答案會變成 0.36。一字之差，答案差了 0.34。"},{"id":"E02","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.22 練習 3：期望值與變異數","lecture":true,"stem":"沿用上一題影音 App 的分配（單次開啟觀看的影片數 X）：","table":{"head":["x（部）","0","1","2","3","4"],"rows":[["f(x)","0.08","0.22","0.34","0.24","0.12"]]},"parts":[{"label":"(1)","type":"num","unit":"部","q":"計算期望值 E(X)。","ans":2.1,"tol":0.01,"sol":"E(X) = Σ x·f(x) = 0(0.08) + 1(0.22) + 2(0.34) + 3(0.24) + 4(0.12) = \u003cb>2.1\u003c/b> 部\u003cbr>解讀：平均每次開啟 App 會看約 2 部影片。"},{"label":"(2)","type":"num","unit":"","q":"用表格求解法計算 Var(X)（請在紙上附上完整的五欄表格）。","ans":1.25,"tol":0.001,"sol":"σ² = Σ(x − μ)²·f(x) = \u003cb>1.25\u003c/b>（完整表格見下方）","wide":{"head":["x","f(x)","x·f(x)","x − μ","(x − μ)²","(x − μ)²·f(x)","x²·f(x)"],"rows":[["0","0.08","0","-2.1","4.41","0.3528","0"],["1","0.22","0.22","-1.1","1.21","0.2662","0.22"],["2","0.34","0.68","-0.1","0.01","0.0034","1.36"],["3","0.24","0.72","0.9","0.81","0.1944","2.16"],["4","0.12","0.48","1.9","3.61","0.4332","1.92"],["合計","1.00","μ = 2.1","—","—","σ² = 1.25","E(X²) = 5.66"]]}},{"label":"(3)","type":"num","unit":"部","q":"計算標準差 σ。","ans":1.118,"tol":0.01,"sol":"σ = √Var(X) = √1.25 = \u003cb>1.118\u003c/b> ≈ 1.12 部"},{"label":"(4)","type":"num","unit":"","q":"用捷徑公式 Var(X) = E(X²) − μ² 再算一次，確認兩種算法結果相同。請填入 E(X²)。","ans":5.66,"tol":0.01,"sol":"E(X²) = Σ x²·f(x) = 5.66\u003cbr>驗算：E(X²) − μ² = 5.66 − 2.1² = 5.66 − 4.41 = \u003cb>1.25\u003c/b> ✓ 與 (2) 完全一致"},{"label":"(5)","type":"text","q":"若 App 改版後 E(X) 上升到 2.6 部但 σ 也從原本的值上升到 1.8 部，這代表什麼？","ref":"平均觀看部數變多是好事（從 2.1 升到 2.6），但 σ 也從 1.12 升到 1.8，表示使用者行為更\u003cb>分化\u003c/b> —— 可能一部分人看得更多、另一部分人反而更快離開。改版成效要分群再看，不能只看平均。","rubric":["指出平均上升是正面訊號","指出 σ 上升代表波動／分化變大","提出「只看平均會蓋掉分化」或建議分群分析"]}],"note":"(4) 的捷徑公式減掉的是「平均數的平方」μ²，不是 μ。這是改卷時最常見的扣分點。"},{"id":"E03","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.13 由相對次數建立機率分配（DiCarlo）","lecture":true,"stem":"某手機行統計過去 300 個營業日的每日銷售量 X，天數紀錄如下表。","table":{"head":["x（台）","0","1","2","3","4","5"],"rows":[["天數","36","108","75","48","24","9"]]},"parts":[{"label":"(1)","type":"num","unit":"","q":"用相對次數法建立機率分配，f(1) 是多少？","ans":0.36,"tol":0.001,"sol":"f(x) = 天數 ÷ 300，所以 f(1) = 108 ÷ 300 = \u003cb>0.36\u003c/b>\u003cbr>完整分配：f(0) = 0.12、f(1) = 0.36、f(2) = 0.25、f(3) = 0.16、f(4) = 0.08、f(5) = 0.03"},{"label":"(2)","type":"text","q":"檢查這是否為合法的機率分配。","ref":"合法。六個 f(x) 都 ≥ 0 ✓；總和 = 0.12 + 0.36 + 0.25 + 0.16 + 0.08 + 0.03 = 1 ✓","rubric":["寫出兩個條件","實際加總驗算"]},{"label":"(3)","type":"num","unit":"台","q":"計算 E(X)，並用一句話解讀。","ans":1.81,"tol":0.01,"sol":"E(X) = 0(0.12) + 1(0.36) + 2(0.25) + 3(0.16) + 4(0.08) + 5(0.03) = \u003cb>1.81\u003c/b> 台\u003cbr>解讀：長期而言平均每日賣出約 1.81 台。"},{"label":"(4)","type":"num","unit":"","q":"計算 Var(X)。","ans":1.5539,"tol":0.001,"sol":"E(X²) = 4.83\u003cbr>Var(X) = E(X²) − μ² = 4.83 − 1.81² = \u003cb>1.5539\u003c/b>\u003cbr>σ = 1.2466 台"},{"label":"(5)","type":"text","q":"店長說「平均每天賣 2 台以上」。根據這張分配，這句話對嗎？","ref":"不對。E(X) = 1.81 台，不到 2 台。另外「賣 2 台以上」的機率 P(X ≥ 2) = 0.52，也只有約 52%。無論用期望值還是用機率解讀，這句話都站不住。","rubric":["算出並引用 E(X) = 1.81","明確回答「不對」","（加分）另外算出 P(X ≥ 2) 佐證"]}],"note":null},{"id":"E04","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.21 期望值怎麼用在決策上","lecture":true,"stem":"某資訊公司評估兩個系統維護外包方案，年度淨利（萬元）的機率分配如下：","table":{"head":["方案","淨利 x","機率 f(x)","淨利 x","機率 f(x)","淨利 x","機率 f(x)"],"rows":[["A","-30","0.2","50","0.4","90","0.4"],["B","40","0.4","50","0.4","70","0.2"]]},"parts":[{"label":"(1)","type":"num","unit":"萬元","q":"計算 A 案的期望淨利 E(X_A)。","ans":50.0,"tol":0.01,"sol":"E(X_A) = (-30)(0.2) + (50)(0.4) + (90)(0.4) = \u003cb>50\u003c/b> 萬元"},{"label":"(2)","type":"num","unit":"萬元","q":"計算 B 案的期望淨利 E(X_B)。","ans":50.0,"tol":0.01,"sol":"E(X_B) = (40)(0.4) + (50)(0.4) + (70)(0.2) = \u003cb>50\u003c/b> 萬元\u003cbr>兩案期望值相同，光看 E(X) 無法做決定。"},{"label":"(3)","type":"num","unit":"萬元","q":"計算 A 案的標準差 σ_A。","ans":43.82,"tol":0.5,"sol":"Var(X_A) = Σ(x − μ)²f(x) = 1920，σ_A = √1920 = \u003cb>43.82\u003c/b> 萬元"},{"label":"(4)","type":"num","unit":"萬元","q":"計算 B 案的標準差 σ_B。","ans":10.95,"tol":0.5,"sol":"Var(X_B) = 120，σ_B = \u003cb>10.95\u003c/b> 萬元\u003cbr>A 的波動約是 B 的 4 倍。"},{"label":"(5)","type":"text","q":"若你是決策者，會選哪一案？請以 E(X) 與 σ 為依據說明理由。","ref":"兩案期望淨利相同（都是 5 萬），差別在風險。σ_A ≈ 43.8 萬，σ_B ≈ 11 萬，A 的波動是 B 的 4 倍，而且 A 有 2% 的機率會虧 30 萬。\u003cbr>保守的決策者應選 B：期望報酬一樣但幾乎不會虧錢。能承受風險者才考慮 A，因為它有 4% 的機會賺到 90 萬。\u003cb>答哪一案都可以，關鍵是有沒有同時引用 E(X) 與 σ。\u003c/b>","rubric":["指出兩案 E(X) 相同","引用兩個 σ 的數值做比較","說明自己的風險偏好立場（保守／可承受風險）","（加分）指出 A 有虧損的可能"]}],"note":"兩案期望值刻意設計成相同，逼你去看 σ。期望值告訴你「平均會怎樣」，變異數告訴你「可能偏離多遠」，兩個都要看。"},{"id":"E05","ch":5,"chapter":"離散機率分配","topic":"二項分配","src":"P.27 馬丁服飾店：n = 3、p = 0.30","lecture":true,"stem":"某門市根據過去經驗，每位進店顧客有 25% 會完成購買。今天隨機觀察 4 位進店顧客，令 X 為完成購買的人數。","table":null,"parts":[{"label":"(1)","type":"text","q":"請逐條檢查這個情境是否符合二項實驗的四個條件，並寫出 n 與 p。","ref":"符合，n = 4、p = 0.25。① 觀察 4 位固定 ✓　② 每位只有買／不買兩種結果 ✓　③ p = 0.25 每位都相同 ✓　④ 顧客之間互不影響（獨立）✓","rubric":["四個條件逐條檢查，不是只寫「符合」","明確寫出 n = 4","明確寫出 p = 0.25"]},{"label":"(2)","type":"num","unit":"","q":"恰好有 2 位完成購買的機率是多少？請寫出完整代入過程。","ans":0.2109,"tol":0.001,"sol":"f(2) = C(4,2) × 0.25² × 0.75\u003csup>4−2\u003c/sup> = 6 × 0.0625 × 0.5625 = \u003cb>0.2109\u003c/b>\u003cbr>注意失敗次數的指數是 n − x = 4 − 2 = 2。"},{"label":"(3)","type":"num","unit":"","q":"至少有 1 位完成購買的機率是多少？（提示：用餘集）","ans":0.6836,"tol":0.001,"sol":"P(X ≥ 1) = 1 − f(0) = 1 − C(4,0) × 0.25⁰ × 0.75\u003csup>4\u003c/sup> = 1 − 0.316406 = \u003cb>0.6836\u003c/b>\u003cbr>若硬算 f(1)+f(2)+f(3)+f(4) 要算四次，用餘集只要算一次。"},{"label":"(4)","type":"num","unit":"位","q":"計算 E(X)。","ans":1.0,"tol":0.01,"sol":"E(X) = np = 4 × 0.25 = \u003cb>1\u003c/b> 位"},{"label":"(5)","type":"num","unit":"位","q":"計算標準差 σ。","ans":0.866,"tol":0.01,"sol":"Var(X) = np(1−p) = 4 × 0.25 × 0.75 = 0.75\u003cbr>σ = √0.75 = \u003cb>0.866\u003c/b> 位"}],"note":null},{"id":"E06","ch":5,"chapter":"離散機率分配","topic":"二項分配","src":"P.29 練習 4：二項分配","lecture":true,"stem":"某企業的資安監控系統每天會標記一批「可疑連線」。根據過去紀錄，被標記的可疑連線中有 15% 是真正的攻擊。今天隨機抽出 8 筆可疑連線進行人工複核，令 X 為其中真正是攻擊的筆數。","table":null,"parts":[{"label":"(1)","type":"num","unit":"","q":"恰好有 2 筆是真正攻擊的機率是多少？","ans":0.2376,"tol":0.001,"sol":"f(2) = C(8,2) × 0.15² × 0.85\u003csup>6\u003c/sup> = 28 × 0.0225 × 0.37715 = \u003cb>0.2376\u003c/b>"},{"label":"(2)","type":"num","unit":"","q":"一筆都不是真正攻擊的機率是多少？","ans":0.2725,"tol":0.001,"sol":"f(0) = 0.85\u003csup>8\u003c/sup> = \u003cb>0.2725\u003c/b>"},{"label":"(3)","type":"num","unit":"","q":"至少有 1 筆是真正攻擊的機率是多少？","ans":0.7275,"tol":0.001,"sol":"P(X ≥ 1) = 1 − f(0) = 1 − 0.272491 = \u003cb>0.7275\u003c/b>\u003cbr>最常見的錯誤是把「至少 1 筆」寫成 f(1)。看到「至少」一律先想餘集。"},{"label":"(4)","type":"num","unit":"筆","q":"計算 E(X)。","ans":1.2,"tol":0.01,"sol":"E(X) = np = 8 × 0.15 = \u003cb>1.2\u003c/b> 筆"},{"label":"(5)","type":"text","q":"用一句話解讀 E(X) 對資安團隊的管理意義。","ref":"每複核 8 筆可疑連線，平均只會抓到約 1.2 筆真正的攻擊，也就是約 85% 的人工複核工時花在誤報上。這正是資安團隊必須持續調整偵測規則、降低誤報率的原因 —— 否則人力會被誤報吃光。","rubric":["引用 E(X) = 1.2 筆這個數字","把它翻譯成「多少工時花在誤報上」之類的管理語言","（加分）連結到降低誤報率的行動建議"]}],"note":"這題的誤報問題和第 4 章貝氏定理的垃圾郵件誤殺率是同一個管理問題，期中考可能合併考。"},{"id":"E08","ch":5,"chapter":"離散機率分配","topic":"卜瓦松分配","src":"P.34 練習 5：卜瓦松分配","lecture":true,"stem":"某校園網路的資訊中心客服專線，根據過去一學期的紀錄，平均每 20 分鐘會接到 5 通求助電話。假設來電符合卜瓦松分配的兩個性質。","table":null,"parts":[{"label":"(1)","type":"num","unit":"通","q":"若要分析「8 分鐘內」的來電情形，μ 應該換算成多少？請寫出換算過程。","ans":2.0,"tol":0.01,"sol":"每分鐘平均 5 ÷ 20 = 0.25 通\u003cbr>8 分鐘平均 0.25 × 8 = \u003cb>2\u003c/b> 通\u003cbr>\u003cb>這一步算錯，後面全錯而且計算機不會報錯。\u003c/b>"},{"label":"(2)","type":"num","unit":"","q":"某個 8 分鐘內恰好接到 2 通電話的機率是多少？","ans":0.2707,"tol":0.001,"sol":"f(2) = 2² × e^(−2) ÷ 2! = 4 × 0.135335 ÷ 2 = \u003cb>0.2707\u003c/b>"},{"label":"(3)","type":"num","unit":"","q":"某個 8 分鐘內一通電話都沒有的機率是多少？","ans":0.1353,"tol":0.001,"sol":"f(0) = 2⁰ × e^(−2) ÷ 0! = 1 × 0.135335 ÷ 1 = \u003cb>0.1353\u003c/b>\u003cbr>注意 μ⁰ = 1 且 \u003cb>0! = 1\u003c/b>，兩個都是 1，所以 f(0) 就是 e^(−μ)。"},{"label":"(4)","type":"text","q":"承 (3)，若值班人員想利用空檔處理其他事務，依這個機率你會建議他怎麼安排？","ref":"沒來電的機率只有 13.5%，換句話說約 86% 的 8 分鐘區段至少會有一通電話。因此不宜安排會被打斷的連續性工作（例如寫程式、處理需要專注的文件），適合安排可以隨時中斷的瑣事。","rubric":["引用 (3) 算出的 0.1353 或其反面 0.8647","給出具體可執行的排班建議","理由與機率數字有連結，不是空泛描述"]}],"note":"(1) 的區間換算是本章最常見的失分點，也是期中考高頻考點。考試時第一個動作：圈出題目問的區間，把 μ 換算好寫在旁邊，再動筆代公式。"},{"id":"E09","ch":5,"chapter":"離散機率分配","topic":"卜瓦松分配","src":"P.32 收費站：15 分鐘平均 10 輛車","lecture":true,"stem":"某資料中心的門禁系統紀錄顯示，平均每 30 分鐘有 12 人次刷卡進入機房。","table":null,"parts":[{"label":"(1)","type":"num","unit":"","q":"某一個 30 分鐘內恰好有 5 人次刷卡的機率是多少？","ans":0.0127,"tol":0.001,"sol":"問的區間與題目給的區間一致，μ = 12 不必換算。\u003cbr>f(5) = 12⁵ × e^(−12) ÷ 5! = 248832 × 0.00000614 ÷ 120 = \u003cb>0.0127\u003c/b>"},{"label":"(2)","type":"num","unit":"人次","q":"若改問「10 分鐘內」的情形，μ 應換算成多少？","ans":4.0,"tol":0.01,"sol":"每分鐘 12 ÷ 30 = 0.4 人次 → 10 分鐘 0.4 × 10 = \u003cb>4\u003c/b> 人次"},{"label":"(3)","type":"num","unit":"","q":"某個 10 分鐘內恰好有 3 人次刷卡的機率是多少？","ans":0.1954,"tol":0.001,"sol":"f(3) = 4³ × e^(−4) ÷ 3! = 64 × 0.018316 ÷ 6 = \u003cb>0.1954\u003c/b>"},{"label":"(4)","type":"text","q":"(1) 的答案（30 分鐘 5 人次）與 (3) 的答案（10 分鐘 3 人次）哪一個大？為什麼同一個來訪率會得到不同的機率？","ref":"(3) 比較大（0.1954 > 0.0127）。\u003cbr>兩者描述的是同一個來訪率，但\u003cb>問的區間不同，μ 就不同\u003c/b>（12 vs 4），分配整個不一樣。\u003cbr>而且 (1) 問的 5 人次離 μ = 12 很遠，落在尾端所以機率低；(3) 問的 3 人次離 μ = 4 很近，落在中心所以機率高。區間拉長，分配會變得更分散，剛好落在某一個數字上的機率反而下降。","rubric":["正確比較出大小","指出兩題的 μ 不同","（加分）用「離 μ 遠近」或「區間拉長分配變分散」解釋"]}],"note":null},{"id":"E10","ch":5,"chapter":"離散機率分配","topic":"分配選擇與綜合判斷","src":"P.36 伺服器要準備多少容量？","lecture":true,"stem":"某系統的 API 服務平均每秒收到 4 個請求。伺服器目前的設定是「同一秒最多處理 7 個請求」，超過的就會被拒絕。","table":{"head":["每秒請求數 x","0","1","2","3","4","5","6","7","8 以上"],"rows":[["f(x)（μ = 4）","0.0183","0.0733","0.1465","0.1954","0.1954","0.1563","0.1042","0.0595","0.0511"]]},"parts":[{"label":"(1)","type":"num","unit":"","q":"某一秒內恰好收到 4 個請求的機率是多少？","ans":0.1954,"tol":0.001,"sol":"f(4) = 4⁴ × e^(−4) ÷ 4! = 256 × 0.018316 ÷ 24 = \u003cb>0.1954\u003c/b>"},{"label":"(2)","type":"num","unit":"","q":"某一秒內請求被拒絕（即 X ≥ 8）的機率是多少？","ans":0.0511,"tol":0.002,"sol":"P(X ≥ 8) = 1 − P(X ≤ 7) = 1 − 0.9489 = \u003cb>0.0511\u003c/b>\u003cbr>約每 20 秒就有一秒會拒絕到請求。"},{"label":"(3)","type":"num","unit":"秒","q":"一天有 86,400 秒，預估一天中大約有多少秒處於滿載拒絕狀態？","ans":4418.0,"tol":200,"sol":"0.0511 × 86,400 ≈ \u003cb>4,418\u003c/b> 秒"},{"label":"(4)","type":"text","q":"某位同學說「平均才 4 個請求、容量有 7 個，綽綽有餘」。請評論這個說法，並提出管理上的建議。","ref":"這個說法低估了風險。只看平均值 4 會忽略分配的\u003cb>尾端\u003c/b>：實際上有 5.11% 的秒數會超過容量，一天約 4,418 秒處於拒絕狀態，對線上服務而言太高。\u003cbr>管理建議：提高處理容量，或加上佇列緩衝讓超量請求排隊而非直接拒絕。\u003cb>這個決定的依據是整張分配，而不是平均值。\u003c/b>","rubric":["明確指出這個說法有問題","引用 (2) 或 (3) 的數字佐證","提出具體建議（提高容量或加佇列）","（加分）點出「平均值掩蓋尾端」這個觀念"]}],"note":"如果老闆只給你「平均每秒 4 個」這個數字，你敢不敢簽 SLA？這題和第 3 章「只看平均數會誤判」是同一個教訓。"},{"id":"E11","ch":5,"chapter":"離散機率分配","topic":"分配選擇與綜合判斷","src":"P.37 三種分配怎麼選","lecture":true,"stem":"下列三個情境分別應該用哪一種離散機率分配？請寫出分配名稱、參數，並簡述判斷依據。","table":null,"parts":[{"label":"(1)","type":"text","q":"情境一：隨機抽查 20 件出廠產品，已知長期不良率為 3%，令 X 為不良品件數。","ref":"\u003cb>二項分配\u003c/b>，n = 20、p = 0.03。\u003cbr>依據：題目明確給了試驗次數 n = 20，每件只有良品／不良品兩種結果，p 固定且各件獨立，X 的範圍是 0 到 20（有上限）。","rubric":["答出二項分配","寫出 n = 20 與 p = 0.03","說明依據（有固定 n、兩種結果、p 固定、獨立）"]},{"label":"(2)","type":"text","q":"情境二：某電商網站平均每分鐘有 25 人次到訪，令 X 為某一分鐘內的到訪人次。","ref":"\u003cb>卜瓦松分配\u003c/b>，μ = 25（每分鐘）。\u003cbr>依據：題目給的是「平均每＿＿發生幾次」這種\u003cb>發生率\u003c/b>，根本數不出 n 是多少；X 沒有上限，可以一直數下去。","rubric":["答出卜瓦松分配","寫出 μ = 25","說明依據（給的是發生率、無上限）"]},{"label":"(3)","type":"text","q":"情境三：從裝有 10 張號碼牌（1～10）的箱子中隨機抽一張，令 X 為抽中的號碼。","ref":"\u003cb>離散型均勻分配\u003c/b>，n = 10，f(x) = 1/10 = 0.1。\u003cbr>依據：每一個結果出現的機率完全相同，這是古典機率法的典型情形。","rubric":["答出離散型均勻分配","寫出 f(x) = 1/10","說明依據（每個結果機會均等）"]},{"label":"(4)","type":"text","q":"若情境一改成「從 100 件產品中\u003cb>不放回\u003c/b>抽 20 件」，還能用原來的分配嗎？為什麼？","ref":"\u003cb>不能\u003c/b>，不放回會同時破壞兩個條件：抽走一件不良品後，下一次抽到不良品的機率就改變了（p 不固定），而且各次結果互相影響（不獨立）。\u003cbr>這種情形要改用\u003cb>超幾何分配\u003c/b>。若改成抽完放回再抽，就完全符合二項了。","rubric":["回答「不能」","指出 p 會改變或各次不獨立","（加分）點名超幾何分配，或提出「放回」可以修復"]}],"note":null},{"id":"E12","ch":5,"chapter":"離散機率分配","topic":"期望值與變異數","src":"P.28 二項分配的期望值與變異數","lecture":false,"stem":"下列是三個關於本章公式的觀念問題，請用文字與必要的算式作答。","table":null,"parts":[{"label":"(1)","type":"text","q":"請用「指示變數」的想法，說明二項分配為什麼 E(X) = np。","ref":"把 n 次試驗各配一個變數 I_i，第 i 次成功時 I_i = 1、失敗時 I_i = 0，則成功總次數 X = I₁ + I₂ + … + I_n。\u003cbr>單一個 I_i 的期望值 E(I_i) = 1·p + 0·(1−p) = p。\u003cbr>再用期望值的線性性質（和的期望值 = 期望值的和）：E(X) = E(I₁) + … + E(I_n) = p + p + … + p = \u003cb>np\u003c/b>。","rubric":["定義指示變數 I_i（0/1）","寫出 X = ΣI_i","算出 E(I_i) = p","用期望值相加得到 np"]},{"label":"(2)","type":"text","q":"承上，Var(X) = np(1−p) 的推導多用到了哪一個條件？為什麼這個條件不可少？","ref":"多用到\u003cb>獨立\u003c/b>。\u003cbr>因為 I_i² = I_i（0 和 1 平方不變），所以 E(I_i²) = p，Var(I_i) = E(I_i²) − [E(I_i)]² = p − p² = p(1−p)。\u003cbr>但「變異數可以相加」\u003cb>只在各 I_i 互相獨立時才成立\u003c/b>；期望值相加則永遠成立，不需要獨立。\u003cbr>這正是為什麼「獨立」被列進二項實驗的四個條件 —— 它不是裝飾，變異數公式整個靠它撐著。不放回抽樣破壞獨立，變異數就不再是 np(1−p)。","rubric":["明確指出是「獨立」","說明期望值相加不需要獨立、變異數相加才需要","（加分）算出 Var(I_i) = p(1−p)","（加分）舉不放回抽樣為反例"]},{"label":"(3)","type":"text","q":"卜瓦松分配的 E(X) = Var(X) = μ。這個性質在實務上可以怎麼用？","ref":"可以用來\u003cb>檢查卜瓦松模型是否適用\u003c/b>：拿到一組計數資料後，先算樣本平均與樣本變異數比一比。\u003cbr>兩者差不多 → 卜瓦松是合理的模型。\u003cbr>變異數\u003cb>明顯大於\u003c/b>平均 → 事件不是獨立發生的，可能有叢聚現象（例如當機往往一次連三台），此時用卜瓦松會\u003cb>低估尾端風險\u003c/b>，容量規劃會做得太樂觀。","rubric":["指出可以拿來檢查模型是否適用","說明比較樣本平均與樣本變異數","（加分）說明變異數偏大代表什麼（叢聚／不獨立）"]}],"note":"這三題是觀念題，期中考若出簡答題很可能從這裡出。重點不在背公式，而在能不能說清楚公式從哪來、什麼時候會失效。"}]};
+const $ = (s,r)=>(r||document).querySelector(s);
+const app = $('#app');
+
+/* ── 持久化（可能被瀏覽器拒絕，全部包 try/catch） ── */
+const KEY='w7review.v1';
+let store = {hist:[], wrong:{}, seen:{}};
+try{ const raw=localStorage.getItem(KEY); if(raw) store=Object.assign(store, JSON.parse(raw)); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
+
+/* ── 工具 ── */
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function pickSpread(pool, n, keyOf){
+  // 盡量讓每一組（預設為主題，出模擬卷時改成章節）都被抽到：
+  // 先每組輪流各抽一題，再隨機補滿
+  const key = keyOf || (q=>q.topic);
+  const byT={}; shuffle(pool).forEach(q=>{ const k=key(q); (byT[k]=byT[k]||[]).push(q); });
+  const keys=shuffle(Object.keys(byT)), out=[];
+  let guard=0;
+  while(out.length<n && guard++<500){
+    let added=false;
+    for(const k of keys){ if(out.length>=n) break; if(byT[k].length){ out.push(byT[k].shift()); added=true; } }
+    if(!added) break;
+  }
+  return shuffle(out).slice(0,n);
+}
+const esc = s => String(s);
+function tableHTML(t){
+  if(!t) return '';
+  let h='<div class="tw"><table><thead><tr>'+t.head.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>';
+  t.rows.forEach(r=>{ h+='<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>'; });
+  return h+'</tbody></table></div>';
+}
+
+/* ── 狀態 ── */
+let S = null;   // {mode,label,mc:[],calc:[],answers:{},submitted:false}
+
+/* ── 首頁 ── */
+function home(){
+  S=null; setRail(0); $('#hstat').textContent='';
+  const h=store.hist, n=Object.keys(store.wrong).length;
+  const last = h.length ? h[h.length-1] : null;
+  const tot = DATA.mc.length + DATA.calc.length;
+  app.innerHTML = `
+    <h1>把期中考範圍練到不用想</h1>
+    <p class="lede">第 1 到 5 章共 ${tot} 題，每次重新抽題、選項重新排列，所以同一份可以一直做。
+      每題都附完整詳解與出處，錯過的題會自動進錯題本。</p>
+    <div class="modes">
+      <button class="mode" data-m="exam"><b>模擬測驗</b>
+        <span>照期中考比重出一份卷：選擇題 10 題（50 分）＋ 計算與簡答 3 大題（50 分），題目橫跨五章。作答完一次送出、一次看詳解。</span>
+        <em>全範圍 · 約 40 分鐘</em></button>
+      <button class="mode" data-m="chap"><b>單章練習</b>
+        <span>挑一章集中練，每題答完立刻看詳解。某一章特別沒把握的時候用這個。</span>
+        <em>五章 · 每次 6 題</em></button>
+      <button class="mode" data-m="drill"><b>主題練習</b>
+        <span>挑一個細部主題，例如百分位數內插、貝氏定理、區間換算。針對弱點用這個。</span>
+        <em>${DATA.meta.topics.length} 個主題</em></button>
+      <button class="mode" data-m="wrong" ${n?'':'disabled'}><b>錯題複習</b>
+        <span>${n?'只出之前答錯的題目。答對兩次才會從錯題本移除。':'還沒有錯題紀錄。先做一次模擬測驗或單章練習。'}</span>
+        <em>目前 ${n} 題</em></button>
+    </div>
+    ${last?`<div class="hist">上次成績　<span class="num">${last.score}</span> / 100　·　${last.label}　·　共練習 <span class="num">${h.length}</span> 次</div>`:''}
+    <div class="note"><span class="lab">考前提醒</span>
+      整個範圍最常見的失分點有四個：<b>百分位數的 Lp 算出來是「位置」不是「數值」</b>，是小數還要內插；
+      <b>條件機率 P(B|A) 與 P(A|B) 寫反</b>；
+      <b>二項公式把失敗次數的指數寫成 n 而不是 n−x</b>；
+      <b>卜瓦松的 μ 沒換算成題目問的那段區間</b>（算錯不會報錯）。這四點在題庫裡都刻意安排了題目。</div>`;
+  app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{
+    const m=b.dataset.m;
+    if(m==='chap') chapterPick();
+    else if(m==='drill') topicPick();
+    else start(m);
+  });
+}
+
+function chapterPick(){
+  app.innerHTML = `<h1>選一章</h1>
+    <p class="lede">每章抽 5 題選擇題與 1 大題計算，答完一題立刻看詳解。</p>
+    <div class="modes">${DATA.meta.chapters.map(c=>
+      `<button class="mode" data-c="${c.ch}"><b>第 ${c.ch} 章　${c.name}</b>
+        <em>選擇 ${c.n_mc} 題 · 計算 ${c.n_calc} 大題</em></button>`).join('')}</div>
+    <div class="actions"><button class="btn ghost" id="back">回首頁</button></div>`;
+  app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>start('chap', +b.dataset.c));
+  $('#back').onclick=home;
+}
+
+function topicPick(){
+  const byCh = {};
+  DATA.meta.chapters.forEach(c=>byCh[c.ch]={name:c.name, topics:[]});
+  const seen = new Set();
+  [...DATA.mc, ...DATA.calc].forEach(q=>{
+    const k=q.ch+'|'+q.topic;
+    if(!seen.has(k)){ seen.add(k); byCh[q.ch].topics.push(q.topic); }
+  });
+  const blocks = DATA.meta.chapters.map(c=>{
+    const ts = byCh[c.ch].topics;
+    if(!ts.length) return '';
+    return `<h2 style="margin-top:22px">第 ${c.ch} 章　${c.name}</h2>
+      <div class="modes">${ts.map(t=>{
+        const n = DATA.mc.filter(q=>q.topic===t).length + DATA.calc.filter(q=>q.topic===t).length;
+        return `<button class="mode" data-t="${t}"><b>${t}</b><em>題庫 ${n} 題</em></button>`;
+      }).join('')}</div>`;
+  }).join('');
+  app.innerHTML = `<h1>選一個主題</h1>
+    <p class="lede">每個主題抽最多 6 題，答完一題立刻看詳解。</p>
+    ${blocks}
+    <div class="actions"><button class="btn ghost" id="back">回首頁</button></div>`;
+  app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>start('drill', b.dataset.t));
+  $('#back').onclick=home;
+}
+
+/* ── 出卷 ── */
+function start(mode, arg){
+  let mc=[], calc=[], label='';
+  if(mode==='exam'){
+    // 依章節分散抽題，讓一份卷橫跨五章
+    mc = pickSpread(DATA.mc, 10, q=>q.ch);
+    calc = pickSpread(DATA.calc, 3, q=>q.ch);
+    label='模擬測驗';
+  } else if(mode==='chap'){
+    const ch=+arg;
+    const m=DATA.mc.filter(q=>q.ch===ch), c=DATA.calc.filter(q=>q.ch===ch);
+    mc = pickSpread(m, Math.min(5, m.length));
+    calc = shuffle(c).slice(0, 1);
+    const nm=(DATA.meta.chapters.find(x=>x.ch===ch)||{}).name||'';
+    label='單章練習 · 第 '+ch+' 章 '+nm;
+  } else if(mode==='drill'){
+    const topic=arg;
+    const m=DATA.mc.filter(q=>q.topic===topic), c=DATA.calc.filter(q=>q.topic===topic);
+    mc = shuffle(m).slice(0, Math.min(5, m.length));
+    calc = shuffle(c).slice(0, 1);
+    label='主題練習 · '+topic;
+  } else {
+    const ids=Object.keys(store.wrong);
+    mc = shuffle(DATA.mc.filter(q=>ids.includes(q.id))).slice(0,8);
+    calc = shuffle(DATA.calc.filter(q=>ids.includes(q.id))).slice(0,2);
+    label='錯題複習';
+  }
+  // 每題各自打亂選項，並記住正解搬到哪裡
+  mc = mc.map(q=>{
+    const order = shuffle([0,1,2,3]);
+    return {...q, order, ansAt: order.indexOf(q.ans)};
+  });
+  S = {mode, arg, label, mc, calc, answers:{}, rub:{}, submitted:false, instant: mode!=='exam'};
+  render();
+}
+
+/* ── 繪製 ── */
+function setRail(p){ $('#rail').style.width = Math.max(0,Math.min(100,p))+'%'; }
+
+function render(){
+  const parts=[];
+  parts.push(`<div class="eyebrow">${S.label}</div>
+    <h1>${S.mode==='exam'?'模擬測驗卷':'練習'}</h1>
+    <p class="lede">${S.instant
+      ? '每題作答後會立刻顯示詳解。'
+      : '全部作答完再送出。送出後才會顯示答案與詳解，過程中可以回頭修改。'}</p>`);
+
+  if(S.mc.length){
+    parts.push(`<h2>一、選擇題<span class="unit">（每題 ${fmtPt(50/S.mc.length)} 分，共 ${S.mc.length} 題）</span></h2>`);
+    S.mc.forEach((q,i)=>parts.push(mcHTML(q,i)));
+  }
+  if(S.calc.length){
+    parts.push(`<h2 style="margin-top:28px">二、計算題與簡答題<span class="unit">（每大題 ${fmtPt(50/S.calc.length)} 分，共 ${S.calc.length} 大題）</span></h2>`);
+    S.calc.forEach((q,i)=>parts.push(calcHTML(q,i)));
+  }
+  if(!S.submitted){
+    parts.push(`<div class="actions">
+      <button class="btn" id="submit">送出並批改</button>
+      <button class="btn ghost" id="quit">放棄這份，回首頁</button></div>`);
+  }
+  app.innerHTML = parts.join('');
+  wire();
+  updateStat();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function fmtPt(v){ return (Math.round(v*10)/10).toString(); }
+
+function srcTag(q){
+  return `<span class="tag">第 ${q.ch} 章</span><span class="tag">${q.src}</span>`
+    + (q.lecture?`<span class="tag lec">講義範例</span>`:'');
+}
+
+function mcHTML(q,i){
+  const a = S.answers[q.id];
+  const done = S.submitted || (S.instant && a!==undefined);
+  const letters=['A','B','C','D'];
+  const opts = q.order.map((oi,k)=>{
+    let cls='opt';
+    if(done){
+      if(k===q.ansAt) cls+=' ok';
+      else if(a===k) cls+=' no';
+    }
+    return `<button class="${cls}" data-q="${q.id}" data-k="${k}" ${done?'disabled':''}
+      aria-pressed="${a===k}"><span class="k">${letters[k]}</span><span class="v">${q.opts[oi]}</span></button>`;
+  }).join('');
+  let sol='';
+  if(done){
+    const right = a===q.ansAt;
+    sol=`<div class="sol ${right?'good':'bad'}"><span class="lab">${
+      a===undefined?'未作答　正解 '+letters[q.ansAt]
+      : right?'答對':'答錯　正解 '+letters[q.ansAt]}</span>${q.exp}</div>`;
+  }
+  return `<section class="q is-mc" id="sec_${q.id}"><div class="qhead"><span class="qno">${i+1}</span>${srcTag(q)}
+    ${done?`<span class="verdict ${a===q.ansAt?'ok':'no'}">${a===q.ansAt?'＋'+fmtPt(50/S.mc.length):'0'} 分</span>`:''}</div>
+    <div class="stem">${q.q}</div>${tableHTML(q.table)}
+    <div class="opts">${opts}</div>${sol}</section>`;
+}
+
+function calcHTML(q,i){
+  const per = 50/S.calc.length/q.parts.length;
+  const body = q.parts.map((p,pi)=>{
+    const key=q.id+'.'+pi, v=S.answers[key];
+    let field, sol='';
+    if(p.type==='num'){
+      field=`<div class="inrow"><input type="text" id="in_${key}" data-k="${key}"
+        value="${v!==undefined?v:''}" placeholder="答案" ${S.submitted?'disabled':''}
+        inputmode="decimal" autocomplete="off">
+        ${p.unit?`<span class="unit">${p.unit}</span>`:''}
+        <span class="tolnote">容許誤差 ±${p.tol}</span></div>`;
+      if(S.submitted){
+        const ok = gradeNum(p, v);
+        sol=`<div class="sol ${ok?'good':'bad'}"><span class="lab">${
+          v===undefined||v===''?'未作答':ok?'答對':'答錯'}　標準答案 ${p.ans}${p.unit||''}</span>
+          ${p.sol}</div>` + (p.wide?tableHTML(p.wide):'');
+      }
+    } else {
+      field=`<textarea id="in_${key}" data-k="${key}" ${S.submitted?'disabled':''}
+        placeholder="請寫出完整句子或列式">${v!==undefined?v:''}</textarea>`;
+      if(S.submitted){
+        const checked = (S.rub[key]||[]);
+        sol=`<div class="sol"><span class="lab">參考答案</span>${p.ref}
+          <ul class="rub">${p.rubric.map((r,ri)=>`<li><input type="checkbox" data-r="${key}" data-ri="${ri}"
+            id="rb_${key}_${ri}" ${checked.includes(ri)?'checked':''}><label for="rb_${key}_${ri}">${r}</label></li>`).join('')}</ul>
+          <div class="tolnote" style="margin-top:8px">勾選你確實寫到的要點，系統依比例給分。</div></div>`;
+      }
+    }
+    let vd='';
+    if(S.submitted){
+      const sc = partScore(q,pi)*per;
+      const cl = sc>=per*0.99?'ok':sc<=0.01?'no':'half';
+      vd=`<span class="verdict ${cl}" id="vd_${key}">${fmtPt(sc)} / ${fmtPt(per)} 分</span>`;
+    }
+    return `<div class="part"><div class="pq"><span class="plab">${p.label}</span>${p.q}${vd}</div>
+      ${field}${sol}</div>`;
+  }).join('');
+  return `<section class="q is-calc"><div class="qhead"><span class="qno">${i+1}</span>${srcTag(q)}
+    <span class="tag">${q.parts.length} 小題</span></div>
+    <div class="stem">${q.stem}</div>${tableHTML(q.table)}${body}
+    ${S.submitted&&q.note?`<div class="note"><span class="lab">考點提醒</span>${q.note}</div>`:''}</section>`;
+}
+
+/* ── 批改 ── */
+function gradeNum(p, v){
+  if(v===undefined||v==='') return false;
+  const x = parseFloat(String(v).replace(/[^0-9.\-+eE]/g,''));
+  return isFinite(x) && Math.abs(x - p.ans) <= p.tol + 1e-12;
+}
+function partScore(q, pi){        // 回傳 0~1
+  const p=q.parts[pi], key=q.id+'.'+pi;
+  if(p.type==='num') return gradeNum(p, S.answers[key])?1:0;
+  const c=(S.rub[key]||[]).length;
+  return p.rubric.length ? c/p.rubric.length : 0;
+}
+function totals(){
+  let mcPts=0, mcMax=S.mc.length?50:0;
+  if(S.mc.length){ const per=50/S.mc.length;
+    S.mc.forEach(q=>{ if(S.answers[q.id]===q.ansAt) mcPts+=per; }); }
+  let cPts=0, cMax=S.calc.length?50:0;
+  if(S.calc.length){ const per=50/S.calc.length;
+    S.calc.forEach(q=>{ let s=0; q.parts.forEach((p,pi)=>s+=partScore(q,pi));
+      cPts += per * s/q.parts.length; }); }
+  const max = mcMax+cMax || 1;
+  return {mcPts, mcMax, cPts, cMax, score: Math.round((mcPts+cPts)/max*100)};
+}
+function statsBy(keyOf){
+  const m={};
+  const add=(t,got,of)=>{ (m[t]=m[t]||{g:0,o:0}); m[t].g+=got; m[t].o+=of; };
+  S.mc.forEach(q=>add(keyOf(q), S.answers[q.id]===q.ansAt?1:0, 1));
+  S.calc.forEach(q=>{ let s=0; q.parts.forEach((p,pi)=>s+=partScore(q,pi));
+    add(keyOf(q), s, q.parts.length); });
+  return m;
+}
+const topicStats   = () => statsBy(q=>q.topic);
+const chapterStats = () => statsBy(q=>'第 '+q.ch+' 章　'+q.chapter);
+
+function updateStat(){
+  const tot = S.mc.length + S.calc.reduce((a,q)=>a+q.parts.length,0);
+  let done = S.mc.filter(q=>S.answers[q.id]!==undefined).length;
+  S.calc.forEach(q=>q.parts.forEach((p,pi)=>{ const v=S.answers[q.id+'.'+pi]; if(v!==undefined&&v!=='') done++; }));
+  $('#hstat').textContent = S.submitted ? '已批改' : `已作答 ${done} / ${tot}`;
+  setRail(done/tot*100);
+}
+
+function refreshVerdict(key){
+  const qid = key.slice(0, key.lastIndexOf('.')), pi = +key.slice(key.lastIndexOf('.')+1);
+  const q = S.calc.find(x=>x.id===qid); if(!q) return;
+  const el = document.getElementById('vd_'+key); if(!el) return;
+  const per = 50/S.calc.length/q.parts.length, sc = partScore(q,pi)*per;
+  el.className = 'verdict ' + (sc>=per*0.99?'ok':sc<=0.01?'no':'half');
+  el.textContent = fmtPt(sc)+' / '+fmtPt(per)+' 分';
+}
+
+function wire(){
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    const qid=b.dataset.q;
+    S.answers[qid] = +b.dataset.k;
+    if(S.instant){
+      // 只重畫這一題，不動整頁，避免捲動位置與其他題的作答游標被重設
+      const idx=S.mc.findIndex(x=>x.id===qid);
+      const sec=document.getElementById('sec_'+qid);
+      if(sec){ sec.outerHTML = mcHTML(S.mc[idx], idx); }
+      updateStat();
+    } else {
+      const g=b.parentElement;
+      g.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-pressed', o===b));
+      updateStat();
+    }
+  });
+  app.querySelectorAll('input[type=text],textarea').forEach(el=>{
+    el.oninput=()=>{ S.answers[el.dataset.k]=el.value; updateStat(); };
+  });
+  app.querySelectorAll('input[type=checkbox][data-r]').forEach(cb=>{
+    cb.onchange=()=>{
+      const k=cb.dataset.r, ri=+cb.dataset.ri;
+      const arr=new Set(S.rub[k]||[]);
+      cb.checked?arr.add(ri):arr.delete(ri);
+      S.rub[k]=[...arr];
+      refreshVerdict(k);
+      showScore(true);
+    };
+  });
+  const sb=$('#submit'); if(sb) sb.onclick=submit;
+  const qb=$('#quit'); if(qb) qb.onclick=()=>{ if(S.instant||confirmLeave()) home(); };
+}
+function confirmLeave(){ return true; }
+
+function submit(){
+  S.submitted=true;
+  // 更新錯題本
+  S.mc.forEach(q=>{
+    if(S.answers[q.id]===q.ansAt){ bumpRight(q.id); } else { store.wrong[q.id]=true; }
+  });
+  S.calc.forEach(q=>{
+    let s=0; q.parts.forEach((p,pi)=>s+=partScore(q,pi));
+    if(s/q.parts.length>=0.8) bumpRight(q.id); else store.wrong[q.id]=true;
+  });
+  save();
+  render();
+  showScore(false);
+}
+function bumpRight(id){
+  store.seen[id]=(store.seen[id]||0)+1;
+  if(store.seen[id]>=2) delete store.wrong[id];
+}
+
+function showScore(update){
+  const t=totals(), ts=topicStats(), cs=chapterStats();
+  const barsOf = m => Object.entries(m).sort().map(([k,v])=>{
+    const pc = v.o? v.g/v.o*100 : 0;
+    const cl = pc>=80?'':pc>=60?'warn':'poor';
+    return `<div class="bar"><span class="nm" title="${k}">${k}</span>
+      <span class="tr"><i class="${cl}" style="width:${pc.toFixed(0)}%"></i></span>
+      <span class="pc">${pc.toFixed(0)}%</span></div>`;
+  }).join('');
+  const multiCh = Object.keys(cs).length > 1;
+  const bars = (multiCh
+      ? `<div class="eyebrow" style="margin:4px 0 8px">依章節</div>${barsOf(cs)}
+         <div class="eyebrow" style="margin:16px 0 8px">依主題</div>`
+      : '') + barsOf(ts);
+  const weak = Object.entries(ts).filter(([,v])=>v.o&&v.g/v.o<0.6).map(([k])=>k);
+  const weakCh = Object.entries(cs).filter(([,v])=>v.o&&v.g/v.o<0.6).map(([k])=>k);
+  const txt = S.calc.flatMap(q=>q.parts.map((p,pi)=>({q,p,pi}))).filter(o=>o.p.type==='text');
+  const unmarked = txt.filter(o=>!(S.rub[o.q.id+'.'+o.pi]||[]).length).length;
+  const selfNote = unmarked ? `<div class="note" style="margin-top:16px"><span class="lab">還有 ${unmarked} 小題沒自評</span>
+    簡答題沒辦法自動批改，目前以 0 分計。請往下看每一題的參考答案，把你確實寫到的評分要點勾起來，分數會立刻更新。</div>` : '';
+  const html = `<div class="score">
+    <div class="eyebrow">${S.label}</div>
+    <div class="big"><span class="n">${t.score}</span><span class="d">/ 100 分</span></div>
+    <div class="split">
+      <div class="sp"><div class="t">一、選擇題</div><div class="v">${fmtPt(t.mcPts)} <span class="unit">/ ${t.mcMax}</span></div></div>
+      <div class="sp"><div class="t">二、計算與簡答</div><div class="v">${fmtPt(t.cPts)} <span class="unit">/ ${t.cMax}</span></div></div>
+    </div>
+    <div class="bars">${bars}</div>
+    ${selfNote}
+    ${weak.length?`<div class="note" style="margin-top:16px"><span class="lab">建議加強</span>
+      ${weakCh.length?`弱的章節是 <b>${weakCh.join('、')}</b>。`:''}
+      具體的主題：${weak.join('、')} —— 回去看這幾題標註的出處，
+      再用「主題練習」針對它各做一輪。</div>`:
+      `<div class="note" style="margin-top:16px"><span class="lab">狀況不錯</span>
+      這份卷涵蓋的主題都在水準之上。可以換一份新的模擬測驗，題目會重抽。</div>`}
+    <div class="actions">
+      <button class="btn" id="again">再來一份（重新抽題）</button>
+      <button class="btn ghost" id="hm">回首頁</button>
+    </div>
+    <div class="hist">錯題本目前 <span class="num">${Object.keys(store.wrong).length}</span> 題　·
+      累計練習 <span class="num">${store.hist.length}</span> 次</div>
+  </div>`;
+  const old=$('.score');
+  if(old){ old.outerHTML=html; } else { app.insertAdjacentHTML('afterbegin', html); }
+  $('#again').onclick=()=>start(S.mode, S.arg);
+  $('#hm').onclick=home;
+  if(!update){
+    store.hist.push({score:t.score, label:S.label, at:Date.now()});
+    if(store.hist.length>50) store.hist=store.hist.slice(-50);
+    save();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  updateStat();
+}
+
+$('#fratio').textContent = Math.round(DATA.meta.lecture_ratio*100)+'%';
+home();
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<title>離散機率分配複習</title>
+<title>統計學期中考複習</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -212,7 +212,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
 
 <header>
   <div class="hrow">
-    <div class="brand">離散機率分配<small>統計學（一）· 第 5 章 · 期中考複習</small></div>
+    <div class="brand">期中考複習<small>統計學（一）· 第 1 – 5 章</small></div>
     <div class="hspace"></div>
     <div class="hstat" id="hstat"></div>
   </div>
@@ -222,7 +222,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
 <div class="wrap">
   <main id="app"></main>
   <footer>
-    題目取材自第 7 週課堂簡報《離散機率分配》，<span class="num" id="fratio"></span> 為講義範例的相似題（換情境、換數字，解法結構相同）。<br>
+    題目取材自第 1 – 5 章課堂講義與作業，<span class="num" id="fratio"></span> 為講義範例的相似題（換情境、換數字，解法結構相同）。<br>
     計分方式對應期中考：選擇題 50 分、計算與簡答題 50 分。數值題自動批改，簡答題依評分要點自評。<br>
     統計學（一）· 銘傳大學資訊管理學系 · 林漢洲
   </footer>
@@ -241,9 +241,11 @@ function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e
 
 /* ── 工具 ── */
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
-function pickSpread(pool, n){
-  // 盡量讓五大主題都被抽到：先每主題輪流各抽一題，再隨機補滿
-  const byT={}; shuffle(pool).forEach(q=>{ (byT[q.topic]=byT[q.topic]||[]).push(q); });
+function pickSpread(pool, n, keyOf){
+  // 盡量讓每一組（預設為主題，出模擬卷時改成章節）都被抽到：
+  // 先每組輪流各抽一題，再隨機補滿
+  const key = keyOf || (q=>q.topic);
+  const byT={}; shuffle(pool).forEach(q=>{ const k=key(q); (byT[k]=byT[k]||[]).push(q); });
   const keys=shuffle(Object.keys(byT)), out=[];
   let guard=0;
   while(out.length<n && guard++<500){
@@ -269,52 +271,92 @@ function home(){
   S=null; setRail(0); $('#hstat').textContent='';
   const h=store.hist, n=Object.keys(store.wrong).length;
   const last = h.length ? h[h.length-1] : null;
+  const tot = DATA.mc.length + DATA.calc.length;
   app.innerHTML = `
-    <h1>把第 5 章練到不用想</h1>
-    <p class="lede">三種練法，題目每次重抽、選項每次重排，所以同一份可以一直做。
-      每題都附完整詳解與出處投影片頁碼，錯過的題會自動進錯題本。</p>
+    <h1>把期中考範圍練到不用想</h1>
+    <p class="lede">第 1 到 5 章共 ${tot} 題，每次重新抽題、選項重新排列，所以同一份可以一直做。
+      每題都附完整詳解與出處，錯過的題會自動進錯題本。</p>
     <div class="modes">
       <button class="mode" data-m="exam"><b>模擬測驗</b>
-        <span>照期中考比重出一份卷：選擇題 10 題（50 分）＋ 計算與簡答 3 大題（50 分）。作答完一次送出、一次看詳解。</span>
-        <em>約 35 分鐘</em></button>
+        <span>照期中考比重出一份卷：選擇題 10 題（50 分）＋ 計算與簡答 3 大題（50 分），題目橫跨五章。作答完一次送出、一次看詳解。</span>
+        <em>全範圍 · 約 40 分鐘</em></button>
+      <button class="mode" data-m="chap"><b>單章練習</b>
+        <span>挑一章集中練，每題答完立刻看詳解。某一章特別沒把握的時候用這個。</span>
+        <em>五章 · 每次 6 題</em></button>
       <button class="mode" data-m="drill"><b>主題練習</b>
-        <span>挑一個主題連續作答，每題答完立刻看詳解。觀念沒通的時候用這個。</span>
-        <em>五個主題 · 每次 6 題</em></button>
+        <span>挑一個細部主題，例如百分位數內插、貝氏定理、區間換算。針對弱點用這個。</span>
+        <em>${DATA.meta.topics.length} 個主題</em></button>
       <button class="mode" data-m="wrong" ${n?'':'disabled'}><b>錯題複習</b>
-        <span>${n?'只出之前答錯的題目。答對兩次才會從錯題本移除。':'還沒有錯題紀錄。先做一次模擬測驗或主題練習。'}</span>
+        <span>${n?'只出之前答錯的題目。答對兩次才會從錯題本移除。':'還沒有錯題紀錄。先做一次模擬測驗或單章練習。'}</span>
         <em>目前 ${n} 題</em></button>
     </div>
     ${last?`<div class="hist">上次成績　<span class="num">${last.score}</span> / 100　·　${last.label}　·　共練習 <span class="num">${h.length}</span> 次</div>`:''}
     <div class="note"><span class="lab">考前提醒</span>
-      本章最常見的失分點有三個：<b>卜瓦松的 μ 沒換算成題目問的那段區間</b>（算錯不會報錯）、
-      <b>二項公式把失敗次數的指數寫成 n 而不是 n−x</b>、
-      <b>把「至少 1 次」當成 f(1) 而不是 1−f(0)</b>。這三點在題庫裡都刻意安排了題目。</div>`;
+      整個範圍最常見的失分點有四個：<b>百分位數的 Lp 算出來是「位置」不是「數值」</b>，是小數還要內插；
+      <b>條件機率 P(B|A) 與 P(A|B) 寫反</b>；
+      <b>二項公式把失敗次數的指數寫成 n 而不是 n−x</b>；
+      <b>卜瓦松的 μ 沒換算成題目問的那段區間</b>（算錯不會報錯）。這四點在題庫裡都刻意安排了題目。</div>`;
   app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{
     const m=b.dataset.m;
-    if(m==='drill') topicPick(); else start(m);
+    if(m==='chap') chapterPick();
+    else if(m==='drill') topicPick();
+    else start(m);
   });
 }
 
+function chapterPick(){
+  app.innerHTML = `<h1>選一章</h1>
+    <p class="lede">每章抽 5 題選擇題與 1 大題計算，答完一題立刻看詳解。</p>
+    <div class="modes">${DATA.meta.chapters.map(c=>
+      `<button class="mode" data-c="${c.ch}"><b>第 ${c.ch} 章　${c.name}</b>
+        <em>選擇 ${c.n_mc} 題 · 計算 ${c.n_calc} 大題</em></button>`).join('')}</div>
+    <div class="actions"><button class="btn ghost" id="back">回首頁</button></div>`;
+  app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>start('chap', +b.dataset.c));
+  $('#back').onclick=home;
+}
+
 function topicPick(){
+  const byCh = {};
+  DATA.meta.chapters.forEach(c=>byCh[c.ch]={name:c.name, topics:[]});
+  const seen = new Set();
+  [...DATA.mc, ...DATA.calc].forEach(q=>{
+    const k=q.ch+'|'+q.topic;
+    if(!seen.has(k)){ seen.add(k); byCh[q.ch].topics.push(q.topic); }
+  });
+  const blocks = DATA.meta.chapters.map(c=>{
+    const ts = byCh[c.ch].topics;
+    if(!ts.length) return '';
+    return `<h2 style="margin-top:22px">第 ${c.ch} 章　${c.name}</h2>
+      <div class="modes">${ts.map(t=>{
+        const n = DATA.mc.filter(q=>q.topic===t).length + DATA.calc.filter(q=>q.topic===t).length;
+        return `<button class="mode" data-t="${t}"><b>${t}</b><em>題庫 ${n} 題</em></button>`;
+      }).join('')}</div>`;
+  }).join('');
   app.innerHTML = `<h1>選一個主題</h1>
-    <p class="lede">每個主題抽 6 題，答完一題立刻看詳解。</p>
-    <div class="modes">${DATA.meta.topics.map(t=>{
-      const c = DATA.mc.filter(q=>q.topic===t).length + DATA.calc.filter(q=>q.topic===t).length;
-      return `<button class="mode" data-t="${t}"><b>${t}</b><em>題庫 ${c} 題</em></button>`;
-    }).join('')}</div>
+    <p class="lede">每個主題抽最多 6 題，答完一題立刻看詳解。</p>
+    ${blocks}
     <div class="actions"><button class="btn ghost" id="back">回首頁</button></div>`;
   app.querySelectorAll('.mode').forEach(b=>b.onclick=()=>start('drill', b.dataset.t));
   $('#back').onclick=home;
 }
 
 /* ── 出卷 ── */
-function start(mode, topic){
+function start(mode, arg){
   let mc=[], calc=[], label='';
   if(mode==='exam'){
-    mc = pickSpread(DATA.mc, 10);
-    calc = pickSpread(DATA.calc, 3);
+    // 依章節分散抽題，讓一份卷橫跨五章
+    mc = pickSpread(DATA.mc, 10, q=>q.ch);
+    calc = pickSpread(DATA.calc, 3, q=>q.ch);
     label='模擬測驗';
+  } else if(mode==='chap'){
+    const ch=+arg;
+    const m=DATA.mc.filter(q=>q.ch===ch), c=DATA.calc.filter(q=>q.ch===ch);
+    mc = pickSpread(m, Math.min(5, m.length));
+    calc = shuffle(c).slice(0, 1);
+    const nm=(DATA.meta.chapters.find(x=>x.ch===ch)||{}).name||'';
+    label='單章練習 · 第 '+ch+' 章 '+nm;
   } else if(mode==='drill'){
+    const topic=arg;
     const m=DATA.mc.filter(q=>q.topic===topic), c=DATA.calc.filter(q=>q.topic===topic);
     mc = shuffle(m).slice(0, Math.min(5, m.length));
     calc = shuffle(c).slice(0, 1);
@@ -330,7 +372,7 @@ function start(mode, topic){
     const order = shuffle([0,1,2,3]);
     return {...q, order, ansAt: order.indexOf(q.ans)};
   });
-  S = {mode, label, mc, calc, answers:{}, rub:{}, submitted:false, instant: mode!=='exam'};
+  S = {mode, arg, label, mc, calc, answers:{}, rub:{}, submitted:false, instant: mode!=='exam'};
   render();
 }
 
@@ -367,7 +409,8 @@ function render(){
 function fmtPt(v){ return (Math.round(v*10)/10).toString(); }
 
 function srcTag(q){
-  return `<span class="tag">${q.src}</span>` + (q.lecture?`<span class="tag lec">講義範例</span>`:'');
+  return `<span class="tag">第 ${q.ch} 章</span><span class="tag">${q.src}</span>`
+    + (q.lecture?`<span class="tag lec">講義範例</span>`:'');
 }
 
 function mcHTML(q,i){
@@ -462,14 +505,16 @@ function totals(){
   const max = mcMax+cMax || 1;
   return {mcPts, mcMax, cPts, cMax, score: Math.round((mcPts+cPts)/max*100)};
 }
-function topicStats(){
+function statsBy(keyOf){
   const m={};
   const add=(t,got,of)=>{ (m[t]=m[t]||{g:0,o:0}); m[t].g+=got; m[t].o+=of; };
-  S.mc.forEach(q=>add(q.topic, S.answers[q.id]===q.ansAt?1:0, 1));
+  S.mc.forEach(q=>add(keyOf(q), S.answers[q.id]===q.ansAt?1:0, 1));
   S.calc.forEach(q=>{ let s=0; q.parts.forEach((p,pi)=>s+=partScore(q,pi));
-    add(q.topic, s, q.parts.length); });
+    add(keyOf(q), s, q.parts.length); });
   return m;
 }
+const topicStats   = () => statsBy(q=>q.topic);
+const chapterStats = () => statsBy(q=>'第 '+q.ch+' 章　'+q.chapter);
 
 function updateStat(){
   const tot = S.mc.length + S.calc.reduce((a,q)=>a+q.parts.length,0);
@@ -542,15 +587,21 @@ function bumpRight(id){
 }
 
 function showScore(update){
-  const t=totals(), ts=topicStats();
-  const bars = Object.entries(ts).map(([k,v])=>{
+  const t=totals(), ts=topicStats(), cs=chapterStats();
+  const barsOf = m => Object.entries(m).sort().map(([k,v])=>{
     const pc = v.o? v.g/v.o*100 : 0;
     const cl = pc>=80?'':pc>=60?'warn':'poor';
     return `<div class="bar"><span class="nm" title="${k}">${k}</span>
       <span class="tr"><i class="${cl}" style="width:${pc.toFixed(0)}%"></i></span>
       <span class="pc">${pc.toFixed(0)}%</span></div>`;
   }).join('');
+  const multiCh = Object.keys(cs).length > 1;
+  const bars = (multiCh
+      ? `<div class="eyebrow" style="margin:4px 0 8px">依章節</div>${barsOf(cs)}
+         <div class="eyebrow" style="margin:16px 0 8px">依主題</div>`
+      : '') + barsOf(ts);
   const weak = Object.entries(ts).filter(([,v])=>v.o&&v.g/v.o<0.6).map(([k])=>k);
+  const weakCh = Object.entries(cs).filter(([,v])=>v.o&&v.g/v.o<0.6).map(([k])=>k);
   const txt = S.calc.flatMap(q=>q.parts.map((p,pi)=>({q,p,pi}))).filter(o=>o.p.type==='text');
   const unmarked = txt.filter(o=>!(S.rub[o.q.id+'.'+o.pi]||[]).length).length;
   const selfNote = unmarked ? `<div class="note" style="margin-top:16px"><span class="lab">還有 ${unmarked} 小題沒自評</span>
@@ -565,9 +616,11 @@ function showScore(update){
     <div class="bars">${bars}</div>
     ${selfNote}
     ${weak.length?`<div class="note" style="margin-top:16px"><span class="lab">建議加強</span>
-      ${weak.join('、')} —— 回去看這幾題標註的投影片頁碼，再用「主題練習」針對它做一輪。</div>`:
+      ${weakCh.length?`弱的章節是 <b>${weakCh.join('、')}</b>。`:''}
+      具體的主題：${weak.join('、')} —— 回去看這幾題標註的出處，
+      再用「主題練習」針對它各做一輪。</div>`:
       `<div class="note" style="margin-top:16px"><span class="lab">狀況不錯</span>
-      五個主題都在水準之上。可以換一份新的模擬測驗，題目會重抽。</div>`}
+      這份卷涵蓋的主題都在水準之上。可以換一份新的模擬測驗，題目會重抽。</div>`}
     <div class="actions">
       <button class="btn" id="again">再來一份（重新抽題）</button>
       <button class="btn ghost" id="hm">回首頁</button>
@@ -577,7 +630,7 @@ function showScore(update){
   </div>`;
   const old=$('.score');
   if(old){ old.outerHTML=html; } else { app.insertAdjacentHTML('afterbegin', html); }
-  $('#again').onclick=()=>start(S.mode, S.label.split(' · ')[1]);
+  $('#again').onclick=()=>start(S.mode, S.arg);
   $('#hm').onclick=home;
   if(!update){
     store.hist.push({score:t.score, label:S.label, at:Date.now()});

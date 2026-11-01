@@ -1,68 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-統計學（一）期中考複習 — 第 5 章 離散機率分配 題庫產生器。
+"""第 5 章　離散機率分配　題庫。
 
-設計原則
-  1. 所有答案與詳解中的數字一律由程式計算，不手動輸入。
-  2. 標記 lecture=True 者為「課堂講義相似範例」（換情境、換數字，解法結構相同）。
-     目標：lecture 題佔總題數 70% 以上。
-  3. 選擇題與計算／簡答題的配分比重 50 : 50，對應期中考題型。
-輸出：questions.json
+題目取材自第 7 週課堂簡報《離散機率分配》，出處標註到投影片頁碼。
 """
 
-import json
-from math import comb, exp, factorial, sqrt
+from common import (chapter, mc, calc, r, fmt, binom, pois, dist_stats,
+                    comb, exp, sqrt)
 
-# ────────────────────────────────────────────────────────── 計算工具
-
-def binom(n, p, x):
-    return comb(n, x) * p**x * (1 - p)**(n - x)
-
-
-def pois(mu, x):
-    return mu**x * exp(-mu) / factorial(x)
-
-
-def dist_stats(xs, fs):
-    """由機率分配算 μ、E(X²)、σ²、σ。"""
-    assert abs(sum(fs) - 1) < 1e-12, f"機率總和 = {sum(fs)}"
-    assert all(f >= 0 for f in fs)
-    mu = sum(x * f for x, f in zip(xs, fs))
-    ex2 = sum(x * x * f for x, f in zip(xs, fs))
-    var = ex2 - mu * mu
-    return mu, ex2, var, sqrt(var)
-
-
-def r(v, k=4):
-    return round(v + 0.0, k)
-
-
-def fmt(v, k=4):
-    s = f"{v:.{k}f}".rstrip("0").rstrip(".")
-    return s if s else "0"
-
-
-MC, CALC = [], []
-
-
-def mc(id_, topic, src, lecture, q, opts, ans, exp_, table=None):
-    assert len(opts) == 4, id_
-    assert 0 <= ans < 4, id_
-    assert len(set(opts)) == 4, f"{id_} 選項重複"
-    MC.append({"id": id_, "topic": topic, "src": src, "lecture": lecture,
-               "q": q, "table": table, "opts": opts, "ans": ans, "exp": exp_})
-
-
-def calc(id_, topic, src, lecture, stem, parts, table=None, note=None):
-    for p in parts:
-        if p["type"] == "num":
-            assert "ans" in p and "tol" in p, (id_, p["label"])
-        else:
-            assert "ref" in p, (id_, p["label"])
-    CALC.append({"id": id_, "topic": topic, "src": src, "lecture": lecture,
-                 "stem": stem, "table": table, "parts": parts, "note": note})
-
+chapter(5)
 
 T1 = "隨機變數與機率分配"
 T2 = "期望值與變異數"
@@ -455,7 +401,7 @@ mc("M28", T5, "P.37 三種分配怎麼選", True,
 # ╚══════════════════════════════════════════════════════════════════╝
 
 # ── C01：機率分配與事件機率（講義練習 2 相似範例）
-calc("C01", T1, "P.15 練習 2：機率分配與事件機率", True,
+calc("E01", T1, "P.15 練習 2：機率分配與事件機率", True,
      "某影音 App 記錄「使用者單次開啟所觀看的影片數」X，依過去資料整理出下列分配：",
      table={"head": ["x（部）"] + [str(x) for x in APP_X],
             "rows": [["f(x)"] + [fmt(f, 2) for f in APP_F]]},
@@ -495,7 +441,7 @@ for x, f in zip(APP_X, APP_F):
 _rows_c02.append(["合計", "1.00", f"μ = {fmt(APP_MU,2)}", "—", "—",
                   f"σ² = {fmt(APP_VAR,4)}", f"E(X²) = {fmt(APP_EX2,2)}"])
 
-calc("C02", T2, "P.22 練習 3：期望值與變異數", True,
+calc("E02", T2, "P.22 練習 3：期望值與變異數", True,
      "沿用上一題影音 App 的分配（單次開啟觀看的影片數 X）：",
      table={"head": ["x（部）"] + [str(x) for x in APP_X],
             "rows": [["f(x)"] + [fmt(f, 2) for f in APP_F]]},
@@ -535,7 +481,7 @@ calc("C02", T2, "P.22 練習 3：期望值與變異數", True,
      note="(4) 的捷徑公式減掉的是「平均數的平方」μ²，不是 μ。這是改卷時最常見的扣分點。")
 
 # ── C03：由相對次數建立分配（講義 DiCarlo 相似範例）
-calc("C03", T2, "P.13 由相對次數建立機率分配（DiCarlo）", True,
+calc("E03", T2, "P.13 由相對次數建立機率分配（DiCarlo）", True,
      f"某手機行統計過去 {PH_TOT} 個營業日的每日銷售量 X，天數紀錄如下表。",
      table={"head": ["x（台）"] + [str(x) for x in PH_X],
             "rows": [["天數"] + [str(d) for d in PH_DAYS]]},
@@ -572,7 +518,7 @@ calc("C03", T2, "P.13 由相對次數建立機率分配（DiCarlo）", True,
      ])
 
 # ── C04：期望值用於決策（講義 P.21 相似範例）
-calc("C04", T2, "P.21 期望值怎麼用在決策上", True,
+calc("E04", T2, "P.21 期望值怎麼用在決策上", True,
      "某資訊公司評估兩個系統維護外包方案，年度淨利（萬元）的機率分配如下：",
      table={"head": ["方案", "淨利 x", "機率 f(x)", "淨利 x", "機率 f(x)", "淨利 x", "機率 f(x)"],
             "rows": [["A", str(PA_X[0]), fmt(PA_F[0], 2), str(PA_X[1]), fmt(PA_F[1], 2),
@@ -617,7 +563,7 @@ calc("C04", T2, "P.21 期望值怎麼用在決策上", True,
           "期望值告訴你「平均會怎樣」，變異數告訴你「可能偏離多遠」，兩個都要看。")
 
 # ── C05：二項分配基本（講義馬丁服飾店相似範例）
-calc("C05", T3, "P.27 馬丁服飾店：n = 3、p = 0.30", True,
+calc("E05", T3, "P.27 馬丁服飾店：n = 3、p = 0.30", True,
      f"某門市根據過去經驗，每位進店顧客有 {fmt(MT_P*100,0)}% 會完成購買。"
      f"今天隨機觀察 {MT_N} 位進店顧客，令 X 為完成購買的人數。",
      parts=[
@@ -654,7 +600,7 @@ calc("C05", T3, "P.27 馬丁服飾店：n = 3、p = 0.30", True,
      ])
 
 # ── C06：二項分配資安情境（講義練習 4 相似範例）
-calc("C06", T3, "P.29 練習 4：二項分配", True,
+calc("E06", T3, "P.29 練習 4：二項分配", True,
      f"某企業的資安監控系統每天會標記一批「可疑連線」。根據過去紀錄，"
      f"被標記的可疑連線中有 {fmt(SEC_P*100,0)}% 是真正的攻擊。"
      f"今天隨機抽出 {SEC_N} 筆可疑連線進行人工複核，令 X 為其中真正是攻擊的筆數。",
@@ -691,7 +637,7 @@ calc("C06", T3, "P.29 練習 4：二項分配", True,
      note="這題的誤報問題和第 4 章貝氏定理的垃圾郵件誤殺率是同一個管理問題，期中考可能合併考。")
 
 # ── C07：卜瓦松區間換算（講義練習 5 相似範例）★ 最高頻考點
-calc("C08", T4, "P.34 練習 5：卜瓦松分配", True,
+calc("E08", T4, "P.34 練習 5：卜瓦松分配", True,
      f"某校園網路的資訊中心客服專線，根據過去一學期的紀錄，"
      f"平均每 {CS_BASE_MIN} 分鐘會接到 {CS_BASE_N} 通求助電話。假設來電符合卜瓦松分配的兩個性質。",
      parts=[
@@ -726,7 +672,7 @@ calc("C08", T4, "P.34 練習 5：卜瓦松分配", True,
           "考試時第一個動作：圈出題目問的區間，把 μ 換算好寫在旁邊，再動筆代公式。")
 
 # ── C09：卜瓦松（講義收費站相似範例）
-calc("C09", T4, "P.32 收費站：15 分鐘平均 10 輛車", True,
+calc("E09", T4, "P.32 收費站：15 分鐘平均 10 輛車", True,
      f"某資料中心的門禁系統紀錄顯示，平均每 {GATE_MIN} 分鐘有 {GATE_N} 人次刷卡進入機房。",
      parts=[
          {"label": "(1)", "type": "num", "unit": "",
@@ -759,7 +705,7 @@ calc("C09", T4, "P.32 收費站：15 分鐘平均 10 輛車", True,
      ])
 
 # ── C10：卜瓦松容量規劃（講義 P.36 相似範例）
-calc("C10", T5, "P.36 伺服器要準備多少容量？", True,
+calc("E10", T5, "P.36 伺服器要準備多少容量？", True,
      f"某系統的 API 服務平均每秒收到 {fmt(API_MU,0)} 個請求。"
      f"伺服器目前的設定是「同一秒最多處理 {API_CAP} 個請求」，超過的就會被拒絕。",
      table={"head": ["每秒請求數 x"] + [str(x) for x in range(API_CAP + 1)] + [f"{API_CAP+1} 以上"],
@@ -797,7 +743,7 @@ calc("C10", T5, "P.36 伺服器要準備多少容量？", True,
           "這題和第 3 章「只看平均數會誤判」是同一個教訓。")
 
 # ── C11：分配選擇綜合題
-calc("C11", T5, "P.37 三種分配怎麼選", True,
+calc("E11", T5, "P.37 三種分配怎麼選", True,
      "下列三個情境分別應該用哪一種離散機率分配？請寫出分配名稱、參數，並簡述判斷依據。",
      parts=[
          {"label": "(1)", "type": "text",
@@ -828,7 +774,7 @@ calc("C11", T5, "P.37 三種分配怎麼選", True,
      ])
 
 # ── C12：觀念推導簡答
-calc("C12", T2, "P.28 二項分配的期望值與變異數", False,
+calc("E12", T2, "P.28 二項分配的期望值與變異數", False,
      "下列是三個關於本章公式的觀念問題，請用文字與必要的算式作答。",
      parts=[
          {"label": "(1)", "type": "text",
@@ -866,95 +812,3 @@ calc("C12", T2, "P.28 二項分配的期望值與變異數", False,
      ],
      note="這三題是觀念題，期中考若出簡答題很可能從這裡出。"
           "重點不在背公式，而在能不能說清楚公式從哪來、什麼時候會失效。")
-
-# ╔══════════════════════════════════════════════════════════════════╗
-# ║                          驗 證 與 輸 出                           ║
-# ╚══════════════════════════════════════════════════════════════════╝
-checks = []
-
-
-def chk(label, cond, detail=""):
-    checks.append((label, bool(cond), detail))
-
-
-ids = [q["id"] for q in MC] + [q["id"] for q in CALC]
-chk("題號ID 無重複", len(ids) == len(set(ids)), f"共 {len(ids)} 題")
-chk("每題選擇題都有 4 個相異選項",
-    all(len(q["opts"]) == 4 and len(set(q["opts"])) == 4 for q in MC))
-chk("每題選擇題的正解索引合法", all(0 <= q["ans"] < 4 for q in MC))
-chk("每題都有詳解", all(q["exp"].strip() for q in MC))
-
-n_parts = sum(len(q["parts"]) for q in CALC)
-n_num = sum(1 for q in CALC for p in q["parts"] if p["type"] == "num")
-n_text = n_parts - n_num
-chk("計算題每個數值小題都有容許誤差",
-    all(p["tol"] > 0 for q in CALC for p in q["parts"] if p["type"] == "num"))
-chk("計算題每個數值小題都有解題步驟",
-    all(p.get("sol", "").strip() for q in CALC for p in q["parts"] if p["type"] == "num"))
-chk("簡答小題都有參考答案與評分要點",
-    all(p.get("ref", "").strip() and len(p.get("rubric", [])) >= 2
-        for q in CALC for p in q["parts"] if p["type"] == "text"))
-
-lec = sum(1 for q in MC if q["lecture"]) + sum(1 for q in CALC if q["lecture"])
-ratio = lec / len(ids)
-chk("講義相似範例佔比 ≥ 70%", ratio >= 0.70, f"{lec}/{len(ids)} = {ratio*100:.1f}%")
-
-topics = sorted({q["topic"] for q in MC} | {q["topic"] for q in CALC})
-chk("五大主題全部都有題目", len(topics) == 5, "、".join(topics))
-
-# 重新獨立驗算所有數值答案
-recomputed = [
-    ("APP μ", APP_MU, sum(x * f for x, f in zip(APP_X, APP_F))),
-    ("APP σ²", APP_VAR, sum((x - APP_MU)**2 * f for x, f in zip(APP_X, APP_F))),
-    ("PH μ", PH_MU, sum(x * f for x, f in zip(PH_X, PH_F))),
-    ("PH σ²", PH_VAR, sum((x - PH_MU)**2 * f for x, f in zip(PH_X, PH_F))),
-    ("MT E=np", MT_MU, sum(x * binom(MT_N, MT_P, x) for x in range(MT_N + 1))),
-    ("MT Var=np(1-p)", MT_VAR,
-     sum((x - MT_MU)**2 * binom(MT_N, MT_P, x) for x in range(MT_N + 1))),
-    ("SEC E=np", SEC_MU, sum(x * binom(SEC_N, SEC_P, x) for x in range(SEC_N + 1))),
-    ("SEC Var=np(1-p)", SEC_VAR,
-     sum((x - SEC_MU)**2 * binom(SEC_N, SEC_P, x) for x in range(SEC_N + 1))),
-    ("PA σ", PA_SD, sqrt(sum((x - PA_MU)**2 * f for x, f in zip(PA_X, PA_F)))),
-    ("PB σ", PB_SD, sqrt(sum((x - PB_MU)**2 * f for x, f in zip(PB_X, PB_F)))),
-]
-for name, a, b in recomputed:
-    chk(f"交叉驗算 {name}", abs(a - b) < 1e-9, f"{a:.10f} vs {b:.10f}")
-
-chk("二項機率總和為 1", abs(sum(MT_F) - 1) < 1e-12 and abs(sum(SEC_F) - 1) < 1e-12)
-chk("卜瓦松 E = Var = μ 成立",
-    abs(sum(x * pois(CS_MU, x) for x in range(80)) - CS_MU) < 1e-9)
-chk("兩方案期望值刻意相同", abs(PA_MU - PB_MU) < 1e-12, f"{PA_MU} = {PB_MU}")
-chk("A 案風險明顯高於 B 案", PA_SD > PB_SD * 2, f"σ_A={PA_SD:.2f} σ_B={PB_SD:.2f}")
-
-out = {
-    "meta": {
-        "course": "統計學（一）",
-        "chapter": "第 5 章　離散機率分配",
-        "n_mc": len(MC), "n_calc": len(CALC), "n_parts": n_parts,
-        "n_num": n_num, "n_text": n_text,
-        "lecture_ratio": round(ratio, 4),
-        "topics": topics,
-    },
-    "mc": MC, "calc": CALC,
-}
-
-all_ok = all(ok for _, ok, _ in checks)
-if __name__ == "__main__":
-    print(f"選擇題 {len(MC)} 題　計算／簡答題 {len(CALC)} 大題（{n_parts} 小題："
-          f"數值 {n_num}、簡答 {n_text}）")
-    print(f"講義相似範例：{lec}/{len(ids)} = {ratio*100:.1f}%\n")
-    from collections import Counter
-    c = Counter([q["topic"] for q in MC])
-    c2 = Counter([q["topic"] for q in CALC])
-    print(f"{'主題':<22}{'選擇':>6}{'計算':>6}")
-    print("─" * 36)
-    for t in topics:
-        print(f"{t:<22}{c.get(t,0):>6}{c2.get(t,0):>6}")
-    print("\n驗證")
-    for label, ok, detail in checks:
-        print(f"  [{'OK' if ok else '✗'}] {label}" + (f"　{detail}" if detail else ""))
-    print("\n" + ("全部檢查通過" if all_ok else "★ 有檢查未通過 ★"))
-    if all_ok:
-        json.dump(out, open("questions.json", "w", encoding="utf-8"),
-                  ensure_ascii=False, indent=1)
-        print("已輸出 questions.json")

@@ -10,7 +10,7 @@
 
 | 課程 | 單元 | 內容 | 網址 |
 | --- | --- | --- | --- |
-| 統計學（一） | 第 5 章　離散機率分配 | 期中考複習網站：可重複測驗、自動批改、完整詳解 | [開啟](https://actuallife.github.io/MCU_teaching/statistics/ch5-discrete-distributions/) |
+| 統計學（一） | 期中考複習（第 1 – 5 章） | 可重複測驗：模擬考、單章練習、主題練習、錯題複習，自動批改與完整詳解 | [開啟](https://actuallife.github.io/MCU_teaching/statistics/midterm-review/) |
 
 ## 目錄結構
 
